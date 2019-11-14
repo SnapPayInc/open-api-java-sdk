@@ -8,7 +8,7 @@ package ca.snappay.openapi.config.provider;
  */
 public enum SystemSetting {
 
-    SNAPPAY_GATEWAY_HOST("snappay.openapi.gateway-host", "https://open.snappay.ca"),
+    SNAPPAY_GATEWAY_HOST("snappay.openapi.gateway-host", "open.snappay.ca"),
     SNAPPAY_MERCHANT_NO("snappay.openapi.merchant-no", null),
     SNAPPAY_APP_ID("snappay.openapi.app-id", null),
     SNAPPAY_LANGUAGE("snappay.openapi.language", "en-US"),

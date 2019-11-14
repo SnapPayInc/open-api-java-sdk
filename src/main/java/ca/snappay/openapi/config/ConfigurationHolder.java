@@ -3,6 +3,7 @@ package ca.snappay.openapi.config;
 import ca.snappay.openapi.constant.Language;
 import ca.snappay.openapi.constant.SignType;
 import ca.snappay.openapi.utils.Constants;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * The interface defining the configuration properties.
@@ -87,5 +88,40 @@ public interface ConfigurationHolder {
      * @return the private key.
      */
     public String getPrivateKey();
+
+    /**
+     * Validates the configuration.
+     *
+     * @throws OpenApiConfigurationExcepiton if any configuration is missing.
+     */
+    public default void validate() throws OpenApiConfigurationExcepiton {
+        if (StringUtils.isEmpty(getGatewayHost())) {
+            throw new OpenApiConfigurationExcepiton("Gateway host is not configured");
+        }
+        if (StringUtils.isEmpty(getAppId())) {
+            throw new OpenApiConfigurationExcepiton("App ID is not configured");
+        }
+        if (StringUtils.isEmpty(getMerchantNo())) {
+            throw new OpenApiConfigurationExcepiton("Merchant number is not configured");
+        }
+        if (StringUtils.isEmpty(getFormat())) {
+            throw new OpenApiConfigurationExcepiton("Format is not configured");
+        }
+        if (StringUtils.isEmpty(getCharset())) {
+            throw new OpenApiConfigurationExcepiton("Charset is not configured");
+        }
+        if (getLanguage() == null) {
+            throw new OpenApiConfigurationExcepiton("Language is not configured");
+        }
+        if (getSignType() == null) {
+            throw new OpenApiConfigurationExcepiton("Signature type is not configured");
+        }
+        if (StringUtils.isEmpty(getPrivateKey())) {
+            throw new OpenApiConfigurationExcepiton("Private key is not configured");
+        }
+        if (SignType.RSA == getSignType() && StringUtils.isEmpty(getPublicKey())) {
+            throw new OpenApiConfigurationExcepiton("Public key is not configured");
+        }
+    }
 
 }
