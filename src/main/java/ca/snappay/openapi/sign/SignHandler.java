@@ -1,8 +1,7 @@
 package ca.snappay.openapi.sign;
 
 import ca.snappay.openapi.config.ConfigurationHolder;
-import ca.snappay.openapi.utils.Constants;
-import ca.snappay.openapi.utils.StringUtil;
+import ca.snappay.openapi.constant.Constants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -37,7 +36,7 @@ public class SignHandler {
                 sign = signWithRSA(params, config.getPrivateKey());
                 break;
         }
-        if (StringUtil.isEmpty(sign)) {
+        if (StringUtils.isEmpty(sign)) {
             return null;
         }
         return sign;
@@ -57,7 +56,7 @@ public class SignHandler {
         switch (config.getSignType()) {
             case MD5:
                 String signStr = signWithMD5(params, config.getPrivateKey());
-                if (StringUtil.isEmpty(signStr)) {
+                if (StringUtils.isEmpty(signStr)) {
                     return false;
                 }
                 isPass = sign.equals(signStr);
