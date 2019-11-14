@@ -1,4 +1,4 @@
-package com.wiseasy.openapi.utils;
+package ca.snappay.openapi.utils;
 
 /**
  * @Auther: liqie
