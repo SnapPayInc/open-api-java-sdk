@@ -1,12 +1,12 @@
 package ca.snappay.openapi.sign;
 
+import ca.snappay.openapi.LocalDateTimeTypeAdapter;
 import ca.snappay.openapi.config.ConfigurationHolder;
 import ca.snappay.openapi.constant.Constants;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import org.apache.commons.lang.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +18,8 @@ import java.util.List;
  * @version 1.0
  */
 public class SignHandler {
+
+    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter()).create();
 
     /**
      * Sign a request.
@@ -51,6 +53,9 @@ public class SignHandler {
      */
     public static boolean verifySign(ConfigurationHolder config, JsonObject params) {
         String sign = params.get("sign").getAsString();
+        if (StringUtils.isEmpty(sign)) {
+            return true;
+        }
 
         boolean isPass = false;
         switch (config.getSignType()) {
@@ -100,28 +105,26 @@ public class SignHandler {
     private static JsonElement paraFilter(JsonElement param) {
         if (param.isJsonNull()) {
             return null;
-        } else if (param.isJsonPrimitive() && StringUtils.isEmpty(param.getAsString())) {
-            return null;
+        } else if (param.isJsonPrimitive()) {
+            if (StringUtils.isEmpty(param.getAsString())) {
+                return null;
+            } else {
+                return param;
+            }
         } else if (param.isJsonArray()) {
-            boolean hasItem = false;
             JsonArray array = new JsonArray();
             for (JsonElement item : param.getAsJsonArray()) {
                 JsonElement result = paraFilter(item);
                 if (result != null) {
-                    hasItem = true;
                     array.add(item);
                 }
             }
-            if (hasItem) {
-                return array;
-            } else {
-                return null;
-            }
+            return array;
         } else {
             boolean hasItem = false;
             JsonObject object = new JsonObject();
             for (String key : param.getAsJsonObject().keySet()) {
-                if ("sign".equals(key) || "sign_type".equals(key)) {
+                if (Constants.SIGN.equals(key) || Constants.SIGN_TYPE.equals(key)) {
                     continue;
                 }
                 JsonElement value = param.getAsJsonObject().get(key);
@@ -140,7 +143,7 @@ public class SignHandler {
     }
 
     private static String createLinkString(JsonObject params) {
-        params = (JsonObject) paraFilter(params);
+        params = paraFilter(params).getAsJsonObject();
 
         List<String> keys = new ArrayList<>(params.keySet());
         Collections.sort(keys);
@@ -148,8 +151,14 @@ public class SignHandler {
         StringBuilder prestr = new StringBuilder();
 
         for (String key : keys) {
-            String value = params.get(key).getAsString();
-            prestr.append(key).append("=").append(value).append("&");
+            JsonElement value = params.get(key);
+            if (value.isJsonPrimitive()) {
+                prestr.append(key).append("=").append(value.getAsString()).append("&");
+            } else if (value.isJsonArray()) {
+                prestr.append(key).append("=").append(GSON.toJson(value.getAsJsonArray())).append("&");
+            } else if (value.isJsonObject()) {
+                prestr.append(key).append("=").append(GSON.toJson(value.getAsJsonObject())).append("&");
+            }
         }
 
         return prestr.deleteCharAt(prestr.length() - 1).toString();

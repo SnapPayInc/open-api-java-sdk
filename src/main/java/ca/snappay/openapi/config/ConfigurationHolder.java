@@ -2,7 +2,7 @@ package ca.snappay.openapi.config;
 
 import ca.snappay.openapi.constant.Language;
 import ca.snappay.openapi.constant.SignType;
-import ca.snappay.openapi.utils.Constants;
+import ca.snappay.openapi.constant.Constants;
 import org.apache.commons.lang.StringUtils;
 
 /**

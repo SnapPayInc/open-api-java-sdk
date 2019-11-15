@@ -1,23 +1,19 @@
-/**
- * Alipay.com Inc.
- * Copyright (c) 2004-2012 All Rights Reserved.
- */
-package com.wiseasy.openapi;
-
+package ca.snappay.openapi;
 
 /**
- * 异常对象
- * @author liqie
+ * Exception thrown if anything goes wrong with OpenAPI invocation.
+ *
+ * @author shawndu
+ * @version 1.0
  */
 public class OpenApiException extends Exception {
 
-    private String            errCode;
-    private String            errMsg;
+    private String errCode;
+    private String errMsg;
 
     public OpenApiException() {
         super();
     }
-
 
     public OpenApiException(String errCode, String errMsg) {
         super(errCode + ":" + errMsg);

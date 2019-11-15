@@ -1,71 +1,82 @@
-package com.wiseasy.openapi.request;
+package ca.snappay.openapi.request;
 
-import com.wiseasy.openapi.response.OpenApiResponse;
+import ca.snappay.openapi.response.OpenApiResponse;
+import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.ParameterizedType;
+import java.time.LocalDateTime;
 
 /**
- * @Auther: liqie
- * @Date: 2018/11/2 16:40
- * @Description:  API请求对象
+ * This class is the generic type of OpenAPI request.
+ *
+ * @author shawndu
+ * @version 1.0
  */
-public abstract class OpenApiRequest <T extends OpenApiResponse>{
+public abstract class OpenApiRequest<T extends OpenApiResponse> {
 
     /**
-     * 应用ID,开放服务网关分配给开发者的应用ID
+     * The timestamp. If provided, it has to be in UTC timezone.
      */
-    private String app_id;
+    private LocalDateTime timestamp;
 
     /**
-     * 商户生成签名字符串所使用的签名算法类型,目前支持RSA和MD5，推荐使用RSA
+     * Gets the corresponding response type.
+     *
+     * @return the response type.
      */
-    private String sign_type;
-
-    /**
-     * 获取API输出对象类型
-     * @return
-     */
-    public  Class<T> getResponseClass(){
-        return (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    public Class<T> getResponseClass() {
+        return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
     /**
-     * 获取API请求接口方法名
-     * @return
+     * Gets the request method.
+     *
+     * @return the request method.
      */
-    public String getRequestMethod(){
-        String className = this.getClass().getSimpleName();
-        className = className.replace("Request", "");
-        char[] chars = className.toCharArray();
-        String method = "";
-        for (char c : chars){
-            if("".equals(method)){
-                method += (String.valueOf(c)).toLowerCase();
-            }else{
-                if( c >='A' && c <= 'Z'){
-                    method += "." + (String.valueOf(c)).toLowerCase();
-                }else{
-                    method += String.valueOf(c);
-                }
-            }
+    public abstract String getRequestMethod();
+
+    /**
+     * Validates if the request is valid.
+     */
+    public abstract void validate();
+
+    protected void validateRequired(String fieldName, Object field) {
+        if (field == null) {
+            throw new IllegalArgumentException("Missing required field " + fieldName);
         }
-        return method;
     }
 
-
-    public String getApp_id() {
-        return app_id;
+    protected void validateRequired(String fieldName, String field) {
+        if (StringUtils.isEmpty(field)) {
+            throw new IllegalArgumentException("Missing required field " + fieldName);
+        }
     }
 
-    public void setApp_id(String app_id) {
-        this.app_id = app_id;
+    protected void validateLength(String fieldName, String field, int maxLength) {
+        if (field == null) {
+            return;
+        }
+        if (field.trim().length() > maxLength) {
+            throw new IllegalArgumentException("Field " + fieldName + " is too long, max length " + maxLength);
+        }
     }
 
-    public String getSign_type() {
-        return sign_type;
+    protected void validateRange(String fieldName, int field, int min, int max) {
+        if (field < min) {
+            throw new IllegalArgumentException("Field " + fieldName + " is too small, min value " + min);
+        }
+        if (field > max) {
+            throw new IllegalArgumentException("Field " + fieldName + " is too big, max value " + max);
+        }
     }
 
-    public void setSign_type(String sign_type) {
-        this.sign_type = sign_type;
+    protected void validateRange(String fieldName, double field, double min, double max) {
+        if (field < min) {
+            throw new IllegalArgumentException("Field " + fieldName + " is too small, min value " + min);
+        }
+        if (field > max) {
+            throw new IllegalArgumentException("Field " + fieldName + " is too big, max value " + max);
+        }
     }
+
 }

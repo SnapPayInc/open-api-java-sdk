@@ -1,110 +1,148 @@
-package com.wiseasy.openapi;
+package ca.snappay.openapi;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.wiseasy.openapi.request.OpenApiRequest;
-import com.wiseasy.openapi.response.OpenApiResponse;
-import com.wiseasy.openapi.sign.SignHandler;
-import com.wiseasy.openapi.utils.Constants;
-import com.wiseasy.openapi.utils.DateUtil;
-import com.wiseasy.openapi.utils.HttpUtil;
-import com.wiseasy.openapi.utils.StringUtil;
+import ca.snappay.openapi.config.ConfigurationHolder;
+import ca.snappay.openapi.config.OpenApiConfigurationExcepiton;
+import ca.snappay.openapi.config.provider.DefaultConfigurationProvider;
+import ca.snappay.openapi.request.OpenApiRequest;
+import ca.snappay.openapi.sign.SignHandler;
+import ca.snappay.openapi.constant.Constants;
+import ca.snappay.openapi.response.OpenApiResponse;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
- * 开放服务网关默认客户端
+ * The default implementation of <code>OpenApiClient</code> using Apache HttpClient.
  *
+ * @author shawndu
+ * @version 1.0
  */
-public class DefaultOpenApiClient implements OpenApiClient{
+public class DefaultOpenApiClient implements OpenApiClient {
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private static final Log log = LogFactory.getLog(DefaultOpenApiClient.class);
+
+    private static final String GATEWAY_PATH = "/api/gateway";
+
+    private final ConfigurationHolder config;
+    private final URI requestUri;
+
+    private final CloseableHttpClient httpClient;
 
     /**
-     * API请求执行
-     * @param <T>
-     * @param request 请求对象
-     * @param osgServerUrl 开放服务网关服务器地址,请参照Constants类的定义
-     * @param md5KeyOrRsaPrivateKey MD5密钥（MD5签名验签）或RSA客户私钥 (RSA签名)，请根据你所选择的signType决定具体的赋值
-     * @param osgRsaPublicKey 开放服务网关的RSA公钥，RSA签名时不能为空
-     * @param language 客户端可接受语言,如：en-US,zh-CN等
-     * @return 响应对象
-     * @throws OpenApiException
+     * Creates an instance of this client using the given configuration.
+     *
+     * @param config the configuration.
+     * @throws OpenApiConfigurationExcepiton if the given configuration is not valid.
      */
-    public <T extends OpenApiResponse> T execute(OpenApiRequest<T> request, String osgServerUrl, String md5KeyOrRsaPrivateKey,
-                                                 String osgRsaPublicKey, String language) throws OpenApiException{
-        // 基本参数检查
-        String appId = request.getApp_id();
-        String signType = request.getSign_type();
-        paramsCheck(osgRsaPublicKey, appId, signType);
+    public DefaultOpenApiClient(ConfigurationHolder config) throws OpenApiConfigurationExcepiton {
+        this.config = config;
+        this.config.validate();
 
-        // 转换请求OpenApiRequest为 JSON
-        JSONObject requestParams = JSONObject.parseObject(JSON.toJSONString(request));
-
-        // 构建公共参数
-        buildCommonParameters(request, requestParams);
-        Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put("Accept-Language", StringUtil.isEmpty(language) ? Constants.ACCEPT_LANGUAGE_US : language);
-
-        // 签名
-        String signStr = SignHandler.sign(appId, md5KeyOrRsaPrivateKey, signType, requestParams);
-        if(StringUtil.isEmpty(signStr)){
-            throw new OpenApiException("-101", "Sign fail");
-        }
-        requestParams.put(Constants.SIGN, signStr);
-
-        // 请求OSG服务器
-        String resultStr = "";
+        httpClient = HttpClients.createDefault();
         try {
-            log.info("Request to osg[" + osgServerUrl + "] send data[" + requestParams.toJSONString() + "]");
-            resultStr = HttpUtil.doPost(osgServerUrl, headers, requestParams);
-            log.info("Response from osg[" + osgServerUrl + "] receive data[" + resultStr + "]");
+            requestUri = new URIBuilder().setScheme("https").setHost(config.getGatewayHost()).setPath(GATEWAY_PATH).build();
+        } catch (URISyntaxException e) {
+            throw new OpenApiConfigurationExcepiton("Gateway host is invalid", e);
+        }
+    }
+
+    /**
+     * Creates an instance of this client using the default configuration provider chain.
+     *
+     * @throws OpenApiConfigurationExcepiton if the configuration cannot be determined.
+     */
+    public DefaultOpenApiClient() throws OpenApiConfigurationExcepiton {
+        this(DefaultConfigurationProvider.create().resolveConfiguration());
+    }
+
+    public <T extends OpenApiResponse> T execute(OpenApiRequest<T> request) throws OpenApiException {
+        // convert the request object to JsonObject
+        JsonObject requestParams = SignHandler.GSON.toJsonTree(request).getAsJsonObject();
+
+        // build common parameters
+        buildCommonParameters(config.getAppId(), request.getRequestMethod(), requestParams);
+
+        // sign
+        String signStr = SignHandler.sign(config, requestParams);
+        if (StringUtils.isEmpty(signStr)) {
+            throw new OpenApiException("-101", "Sign failed");
+        }
+        requestParams.addProperty(Constants.SIGN, signStr);
+
+        // send request, and process response
+        String resultStr = null;
+        CloseableHttpResponse response = null;
+        try {
+            String requestStr = SignHandler.GSON.toJson(requestParams);
+            log.debug("Request to OpenAPI gateway, send data[" + requestStr + "]");
+            HttpEntity body = new StringEntity(requestStr, ContentType.APPLICATION_JSON);
+
+            HttpPost post = new HttpPost(requestUri);
+            post.addHeader("Accept-Language", config.getLanguage().getLanguage());
+            post.setEntity(body);
+
+            response = httpClient.execute(post);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != 200) {
+                throw new OpenApiException("-102", "Request to OpenAPI gateway failed with status code " + statusCode);
+            }
+
+            HttpEntity entity = response.getEntity();
+            resultStr = EntityUtils.toString(entity, Constants.CHARSET_UTF8);
+            log.debug("Response from OpenAPI gateway, receive data[" + resultStr + "]");
         } catch (Exception e) {
-            log.error("Request to osg[" + osgServerUrl + "] fail", e);
+            log.error("Request to OpenAPI gateway failed", e);
             throw new OpenApiException("-102", "Request to open service gateway fail");
+        } finally {
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
         }
-        JSONObject resultJson = JSONObject.parseObject(resultStr);
 
-        // 验签
-        boolean isPass = SignHandler.verifySign(appId, md5KeyOrRsaPrivateKey, osgRsaPublicKey, signType, resultJson);
-        if(! isPass){
-            throw new OpenApiException("-103", "Response data signature error");
+        JsonObject resultJson = JsonParser.parseString(resultStr).getAsJsonObject();
+
+        boolean isPass = SignHandler.verifySign(config, resultJson);
+        if (!isPass) {
+            throw new OpenApiException("-103", "Response data signature is not valid");
         }
 
-        // 转换返回JSON为OpenApiResponse
-        if(resultJson.getLong(Constants.TOTAL) == 1){
-            resultJson.putAll(resultJson.getJSONArray(Constants.DATA).getJSONObject(0));
+        // convert to response object
+        if (resultJson.get(Constants.TOTAL).getAsNumber().intValue() == 1) {
+            JsonObject data = resultJson.get(Constants.DATA).getAsJsonArray().get(0).getAsJsonObject();
+            for (String key : data.keySet()) {
+                resultJson.add(key, data.get(key));
+            }
         }
-        T resp = JSON.toJavaObject(resultJson, request.getResponseClass());
+        T resp = SignHandler.GSON.fromJson(resultJson, request.getResponseClass());
         return resp;
     }
 
-    private void paramsCheck(String osgRsaPublicKey, String appId, String signType) throws OpenApiException {
-        if(StringUtil.isEmpty(appId)){
-            throw new OpenApiException("-100", "The parameter [appId] cannot be empty");
-        }
-        if(signType.isEmpty()){
-            throw new OpenApiException("-100", "The parameter [signType] cannot be empty");
-        }
-        if(! signType.equals(Constants.SIGN_TYPE_MD5) && ! signType.equals(Constants.SIGN_TYPE_RSA)){
-            throw new OpenApiException("-100", "The parameter [appId] can only be assigned to MD5 or RSA");
-        }
-        if(signType.equals(Constants.SIGN_TYPE_RSA) && StringUtil.isEmpty(osgRsaPublicKey)){
-            throw new OpenApiException("-100", "You are using the RSA signature method,The parameter [osgRsaPublicKey] cannot be empty");
-        }
-    }
-
-    private <T extends OpenApiResponse> void buildCommonParameters(OpenApiRequest<T> request, JSONObject requestParams) {
-        requestParams.put(Constants.METHOD, request.getRequestMethod());
-        requestParams.put(Constants.FORMAT, Constants.FORMAT_JSON);
-        requestParams.put(Constants.CHARSET, Constants.CHARSET_UTF8);
-        requestParams.put(Constants.VERSION, Constants.VERSION_1);
-        requestParams.put(Constants.TIMESTAMP, DateUtil.getCurrDateTimeStr(2));
-        requestParams.remove("responseClass");
-        requestParams.remove("requestMethod");
+    private void buildCommonParameters(String appId, String requestMethod, JsonObject requestParams) {
+        requestParams.addProperty(Constants.APP_ID, appId);
+        requestParams.addProperty(Constants.METHOD, requestMethod);
+        requestParams.addProperty(Constants.FORMAT, config.getFormat());
+        requestParams.addProperty(Constants.CHARSET, config.getCharset());
+        requestParams.addProperty(Constants.VERSION, config.getVersion());
+        requestParams.addProperty(Constants.SIGN_TYPE, config.getSignType().name());
     }
 
 }
