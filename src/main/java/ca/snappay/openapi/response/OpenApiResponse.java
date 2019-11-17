@@ -13,7 +13,7 @@ import java.util.List;
  * @version 1.0
  */
 @Data
-public class OpenApiResponse<T extends OpenApiResponseData> {
+public abstract class OpenApiResponse<T extends OpenApiResponseData> {
 
     private String code;
 
@@ -35,6 +35,19 @@ public class OpenApiResponse<T extends OpenApiResponseData> {
      */
     public boolean isSuccessful() {
         return Constants.CODE_SUCCESS.equals(code);
+    }
+
+    /**
+     * Gets the single result.
+     *
+     * @return the result, if any.
+     */
+    public T getResult() {
+        if (isSuccessful() && total == 1) {
+            return data.get(0);
+        } else {
+            return null;
+        }
     }
 
 }

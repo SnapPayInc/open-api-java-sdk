@@ -3,6 +3,7 @@ package ca.snappay.openapi.response.pay;
 import ca.snappay.openapi.constant.Currency;
 import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.constant.PaymentOperationMethod;
+import ca.snappay.openapi.constant.TransactionStatus;
 import ca.snappay.openapi.response.OpenApiResponseData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -11,8 +12,26 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * The response data for barcode payment.
+ *
+ * @author shawndu
+ * @version 1.0
+ */
 @Data
 public class BarCodePayResponseData implements OpenApiResponseData {
+
+    @SerializedName("trans_no")
+    private String transactionNo;
+
+    @SerializedName("out_order_no")
+    private String orderNo;
+
+    @SerializedName("merchant_no")
+    private String merchantNo;
+
+    @SerializedName("trans_status")
+    private TransactionStatus transactionStatus;
 
     @SerializedName("payment_method")
     private PaymentMethod paymentMethod;
@@ -52,5 +71,10 @@ public class BarCodePayResponseData implements OpenApiResponseData {
 
     @SerializedName("trans_end_time")
     private LocalDateTime completionTime;
+
+    public void setPaymentOperationMethodCode(int paymentOperationMethodCode) {
+        this.paymentOperationMethodCode = paymentOperationMethodCode;
+        this.paymentOperationMethod = PaymentOperationMethod.getFromCode(paymentOperationMethodCode);
+    }
 
 }

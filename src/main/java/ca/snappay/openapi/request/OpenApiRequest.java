@@ -1,6 +1,7 @@
 package ca.snappay.openapi.request;
 
 import ca.snappay.openapi.response.OpenApiResponse;
+import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
  * @author shawndu
  * @version 1.0
  */
+@Data
 public abstract class OpenApiRequest<T extends OpenApiResponse> {
 
     /**
@@ -34,6 +36,15 @@ public abstract class OpenApiRequest<T extends OpenApiResponse> {
      * @return the request method.
      */
     public abstract String getRequestMethod();
+
+    /**
+     * Determines if the request needs to send merchant number.
+     *
+     * @return true if the request needs to send merchant number; or false otherwise.
+     */
+    public boolean needMerchant() {
+        return true;
+    }
 
     /**
      * Validates if the request is valid.

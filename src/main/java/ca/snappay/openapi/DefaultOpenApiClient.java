@@ -4,11 +4,14 @@ import ca.snappay.openapi.config.ConfigurationHolder;
 import ca.snappay.openapi.config.OpenApiConfigurationExcepiton;
 import ca.snappay.openapi.config.provider.DefaultConfigurationProvider;
 import ca.snappay.openapi.request.OpenApiRequest;
+import ca.snappay.openapi.response.pay.BarCodePayResponseData;
 import ca.snappay.openapi.sign.SignHandler;
 import ca.snappay.openapi.constant.Constants;
 import ca.snappay.openapi.response.OpenApiResponse;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,6 +28,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * The default implementation of <code>OpenApiClient</code> using Apache HttpClient.
@@ -71,11 +75,13 @@ public class DefaultOpenApiClient implements OpenApiClient {
     }
 
     public <T extends OpenApiResponse> T execute(OpenApiRequest<T> request) throws OpenApiException {
+        request.validate();
+
         // convert the request object to JsonObject
         JsonObject requestParams = SignHandler.GSON.toJsonTree(request).getAsJsonObject();
 
         // build common parameters
-        buildCommonParameters(config.getAppId(), request.getRequestMethod(), requestParams);
+        buildCommonParameters(request.getRequestMethod(), request.needMerchant(), requestParams);
 
         // sign
         String signStr = SignHandler.sign(config, requestParams);
@@ -126,23 +132,21 @@ public class DefaultOpenApiClient implements OpenApiClient {
         }
 
         // convert to response object
-        if (resultJson.get(Constants.TOTAL).getAsNumber().intValue() == 1) {
-            JsonObject data = resultJson.get(Constants.DATA).getAsJsonArray().get(0).getAsJsonObject();
-            for (String key : data.keySet()) {
-                resultJson.add(key, data.get(key));
-            }
-        }
         T resp = SignHandler.GSON.fromJson(resultJson, request.getResponseClass());
         return resp;
     }
 
-    private void buildCommonParameters(String appId, String requestMethod, JsonObject requestParams) {
-        requestParams.addProperty(Constants.APP_ID, appId);
+    private void buildCommonParameters(String requestMethod, boolean needMerchant, JsonObject requestParams) {
+        requestParams.addProperty(Constants.APP_ID, config.getAppId());
         requestParams.addProperty(Constants.METHOD, requestMethod);
+        if (needMerchant) {
+            requestParams.addProperty(Constants.MERCHANT_NO, config.getMerchantNo());
+        }
         requestParams.addProperty(Constants.FORMAT, config.getFormat());
         requestParams.addProperty(Constants.CHARSET, config.getCharset());
         requestParams.addProperty(Constants.VERSION, config.getVersion());
         requestParams.addProperty(Constants.SIGN_TYPE, config.getSignType().name());
+
     }
 
 }

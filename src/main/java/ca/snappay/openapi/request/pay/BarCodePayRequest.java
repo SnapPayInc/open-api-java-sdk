@@ -5,6 +5,7 @@ import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.request.ExtensionParameters;
 import ca.snappay.openapi.request.OpenApiRequest;
 import ca.snappay.openapi.response.pay.BarCodePayResponse;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
@@ -18,9 +19,6 @@ import lombok.Data;
 public class BarCodePayRequest extends OpenApiRequest<BarCodePayResponse> {
 
     private static final String REQUEST_METHOD = "pay.barcodepay";
-
-    @SerializedName("merchant_no")
-    private String merchantNo;
 
     @SerializedName("payment_method")
     private PaymentMethod paymentMethod;
@@ -42,7 +40,7 @@ public class BarCodePayRequest extends OpenApiRequest<BarCodePayResponse> {
     @SerializedName("notify_url")
     private String notifyUrl;
 
-    private String attach;
+    private JsonObject attach;
 
     private String longitude;
 
@@ -61,8 +59,6 @@ public class BarCodePayRequest extends OpenApiRequest<BarCodePayResponse> {
 
     @Override
     public void validate() {
-        validateRequired("merchantNo", merchantNo);
-        validateLength("merchantNo", merchantNo, 32);
         validateRequired("paymentMethod", paymentMethod);
         validateRequired("orderNo", orderNo);
         validateLength("orderNo", orderNo, 64);
@@ -73,7 +69,6 @@ public class BarCodePayRequest extends OpenApiRequest<BarCodePayResponse> {
         validateRequired("description", description);
         validateLength("description", description, 128);
         validateLength("notifyUrl", notifyUrl, 256);
-        validateLength("attach", attach, 127);
         validateLength("longitude", longitude, 32);
         validateLength("latitude", latitude, 32);
         if (effectiveMinutes != null) {

@@ -12,6 +12,8 @@ public class Constants {
 
     public static final String METHOD = "method";
 
+    public static final String MERCHANT_NO = "merchant_no";
+
     public static final String FORMAT = "format";
 
     public static final String CHARSET = "charset";
@@ -28,15 +30,9 @@ public class Constants {
 
     public static final String VERSION_1 = "1.0";
 
-    public static final String CODE = "code";
-
-    public static final String MSG = "msg";
-
     public static final String TOTAL = "total";
 
     public static final String DATA = "data";
-
-    public static final String PSN = "psn";
 
     public static final String CODE_SUCCESS = "0";
 
