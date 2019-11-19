@@ -2,14 +2,8 @@ package ca.snappay.openapi;
 
 import ca.snappay.openapi.config.BasicConfigurationHolder;
 import ca.snappay.openapi.constant.*;
-import ca.snappay.openapi.request.pay.BarCodePayRequest;
-import ca.snappay.openapi.request.pay.H5PayRequest;
-import ca.snappay.openapi.request.pay.NativePayRequest;
-import ca.snappay.openapi.request.pay.QRCodePayRequest;
-import ca.snappay.openapi.response.pay.BarCodePayResponse;
-import ca.snappay.openapi.response.pay.H5PayResponse;
-import ca.snappay.openapi.response.pay.NativePayResponse;
-import ca.snappay.openapi.response.pay.QRCodePayResponse;
+import ca.snappay.openapi.request.pay.*;
+import ca.snappay.openapi.response.pay.*;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -103,6 +97,25 @@ public class DefaultOpenApiClientTest {
         Assertions.assertEquals("E082003", response.getCode(), "Error code should be correct");
         Assertions.assertEquals(0, response.getTotal().intValue());
         Assertions.assertNotNull(response.getPsn(), "PSN should be given");
+    }
+
+    @Test
+    public void testWebsitePay() throws OpenApiException {
+        WebsitePayRequest request = new WebsitePayRequest();
+        request.setPaymentMethod(PaymentMethod.ALIPAY);
+        request.setBrowserType(BrowserType.PC);
+        request.setOrderNo("" + System.nanoTime());
+        request.setAmount(0.01);
+        request.setDescription("test web");
+
+        WebsitePayResponse response = client.execute(request);
+
+        Assertions.assertNotNull(response, "API request should be successful");
+        Assertions.assertEquals("0", response.getCode(), "Code should be 0");
+        Assertions.assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
+        Assertions.assertNotNull(response.getResult(), "Result should not be null");
+        Assertions.assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
+        Assertions.assertNotNull(response.getResult().getWebpayUrl(), "Payment URL should not be null");
     }
 
 }
