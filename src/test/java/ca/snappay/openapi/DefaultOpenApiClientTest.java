@@ -3,9 +3,11 @@ package ca.snappay.openapi;
 import ca.snappay.openapi.config.BasicConfigurationHolder;
 import ca.snappay.openapi.constant.*;
 import ca.snappay.openapi.request.order.QueryOrderRequest;
+import ca.snappay.openapi.request.order.RefundOrderRequest;
 import ca.snappay.openapi.request.order.RevokeOrderRequest;
 import ca.snappay.openapi.request.pay.*;
 import ca.snappay.openapi.response.order.QueryOrderResponse;
+import ca.snappay.openapi.response.order.RefundOrderResponse;
 import ca.snappay.openapi.response.order.RevokeOrderResponse;
 import ca.snappay.openapi.response.pay.*;
 import com.google.gson.JsonObject;
@@ -155,6 +157,21 @@ public class DefaultOpenApiClientTest {
 
         Assertions.assertNotNull(response, "API request should be successful");
         Assertions.assertEquals("E045025", response.getCode(), "Error code should be correct");
+        Assertions.assertEquals(0, response.getTotal().intValue());
+        Assertions.assertNotNull(response.getPsn(), "PSN should be given");
+    }
+
+    @Test
+    public void testOrderRefund() throws OpenApiException {
+        RefundOrderRequest request = new RefundOrderRequest();
+        request.setOrderNo("" + System.nanoTime());
+        request.setRefundOrderNo("REF-" + request.getOrderNo());
+        request.setRefundAmount(0.01);
+
+        RefundOrderResponse response = client.execute(request);
+
+        Assertions.assertNotNull(response, "API request should be successful");
+        Assertions.assertEquals("E045043", response.getCode(), "Error code should be correct");
         Assertions.assertEquals(0, response.getTotal().intValue());
         Assertions.assertNotNull(response.getPsn(), "PSN should be given");
     }
