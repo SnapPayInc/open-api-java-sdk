@@ -2,10 +2,12 @@ package ca.snappay.openapi;
 
 import ca.snappay.openapi.config.BasicConfigurationHolder;
 import ca.snappay.openapi.constant.*;
+import ca.snappay.openapi.request.misc.QueryExchangeRateRequest;
 import ca.snappay.openapi.request.order.QueryOrderRequest;
 import ca.snappay.openapi.request.order.RefundOrderRequest;
 import ca.snappay.openapi.request.order.RevokeOrderRequest;
 import ca.snappay.openapi.request.pay.*;
+import ca.snappay.openapi.response.misc.QueryExchangeRateResponse;
 import ca.snappay.openapi.response.order.QueryOrderResponse;
 import ca.snappay.openapi.response.order.RefundOrderResponse;
 import ca.snappay.openapi.response.order.RevokeOrderResponse;
@@ -174,6 +176,21 @@ public class DefaultOpenApiClientTest {
         Assertions.assertEquals("E045043", response.getCode(), "Error code should be correct");
         Assertions.assertEquals(0, response.getTotal().intValue());
         Assertions.assertNotNull(response.getPsn(), "PSN should be given");
+    }
+
+    @Test
+    public void testExchangeRateQuery() throws OpenApiException {
+        QueryExchangeRateRequest request = new QueryExchangeRateRequest();
+        request.setCurrency(Currency.CAD);
+        request.setPaymentMethod(PaymentMethod.WECHATPAY);
+
+        QueryExchangeRateResponse response = client.execute(request);
+
+        Assertions.assertNotNull(response, "API request should be successful");
+        Assertions.assertEquals("0", response.getCode(), "Code should be 0");
+        Assertions.assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
+        Assertions.assertNotNull(response.getResult(), "Result should not be null");
+        Assertions.assertNotNull(response.getResult().getExchangeRate(), "Exchange rate should be returned");
     }
 
 }
