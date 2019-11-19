@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * The response for barcode payment.
+ *
  * @author shawndu
  * @version 1.0
  */
