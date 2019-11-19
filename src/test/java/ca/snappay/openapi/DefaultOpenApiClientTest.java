@@ -1,13 +1,12 @@
 package ca.snappay.openapi;
 
 import ca.snappay.openapi.config.BasicConfigurationHolder;
-import ca.snappay.openapi.constant.Language;
-import ca.snappay.openapi.constant.PaymentMethod;
-import ca.snappay.openapi.constant.SignType;
-import ca.snappay.openapi.constant.TransactionStatus;
+import ca.snappay.openapi.constant.*;
 import ca.snappay.openapi.request.pay.BarCodePayRequest;
+import ca.snappay.openapi.request.pay.H5PayRequest;
 import ca.snappay.openapi.request.pay.QRCodePayRequest;
 import ca.snappay.openapi.response.pay.BarCodePayResponse;
+import ca.snappay.openapi.response.pay.H5PayResponse;
 import ca.snappay.openapi.response.pay.QRCodePayResponse;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Assertions;
@@ -66,6 +65,25 @@ public class DefaultOpenApiClientTest {
         Assertions.assertNotNull(response.getResult(), "Result should not be null");
         Assertions.assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
         Assertions.assertEquals(TransactionStatus.USERPAYING, response.getResult().getTransactionStatus(), "Transaction status should be correct");
+    }
+
+    @Test
+    public void testH5Pay() throws OpenApiException {
+        H5PayRequest request = new H5PayRequest();
+        request.setPaymentMethod(PaymentMethod.WECHATPAY);
+        request.setTradeType(PaymentChannelTradeType.MWEB);
+        request.setOrderNo("" + System.nanoTime());
+        request.setAmount(0.01);
+        request.setDescription("test h5");
+
+        H5PayResponse response = client.execute(request);
+
+        Assertions.assertNotNull(response, "API request should be successful");
+        Assertions.assertEquals("0", response.getCode(), "Code should be 0");
+        Assertions.assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
+        Assertions.assertNotNull(response.getResult(), "Result should not be null");
+        Assertions.assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
+        Assertions.assertNotNull(response.getResult().getH5PaymentUrl(), "Payment URL should not be null");
     }
 
 }
