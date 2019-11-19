@@ -8,8 +8,6 @@ import ca.snappay.openapi.constant.Language;
 import ca.snappay.openapi.constant.SignType;
 import org.apache.commons.lang.StringUtils;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Optional;
 
 /**
@@ -29,10 +27,8 @@ public abstract class SystemSettingsConfigurationProvider implements Configurati
         String publicKey = StringUtils.trim(loadSetting(SystemSetting.SNAPPAY_PUBLIC_KEY).orElse(null));
         String privateKey = StringUtils.trim(loadSetting(SystemSetting.SNAPPAY_PRIVATE_KEY).orElse(null));
 
-        try {
-            new URL(gatewayHost);
-        } catch (MalformedURLException e) {
-            throw new OpenApiConfigurationExcepiton("Gateway host is not valid", e);
+        if (gatewayHost == null) {
+            throw new OpenApiConfigurationExcepiton("Gateway host is missing from configuration");
         }
         if (merchantNo == null) {
             throw new OpenApiConfigurationExcepiton("Merchant number is missing from configuration");
@@ -44,7 +40,7 @@ public abstract class SystemSettingsConfigurationProvider implements Configurati
         if (lang == null) {
             throw new OpenApiConfigurationExcepiton("Language is not valid");
         }
-        SignType sign = SignType.getForKey(signType);
+        SignType sign = SignType.valueOf(signType);
         if (sign == null) {
             throw new OpenApiConfigurationExcepiton("Sign type is not valid");
         }

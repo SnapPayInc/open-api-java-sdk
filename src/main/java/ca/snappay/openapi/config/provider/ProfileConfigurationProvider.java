@@ -14,7 +14,7 @@ import java.util.Properties;
  */
 public class ProfileConfigurationProvider extends SystemSettingsConfigurationProvider {
 
-    private static final String PROFILE_FILE_PATH = System.getProperty("user.home") + ".snappay/config";
+    private static final String PROFILE_FILE_PATH = System.getProperty("user.home") + "/.snappay/config";
 
     private final boolean fileExists;
     private final Properties properties;
@@ -42,7 +42,8 @@ public class ProfileConfigurationProvider extends SystemSettingsConfigurationPro
         if (!fileExists) {
             return Optional.empty();
         }
-        return Optional.ofNullable(properties.getProperty(setting.property()));
+        String key = setting.property().replace("snappay.", "");
+        return Optional.ofNullable(properties.getProperty(key));
     }
 
 }
