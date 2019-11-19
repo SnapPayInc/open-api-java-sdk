@@ -17,7 +17,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
-public abstract class AbstractPayRequest<T extends OpenApiResponse> extends OpenApiRequest {
+public abstract class AbstractPayRequest<T extends OpenApiResponse> extends OpenApiRequest<T> {
 
     @SerializedName("payment_method")
     private PaymentMethod paymentMethod;

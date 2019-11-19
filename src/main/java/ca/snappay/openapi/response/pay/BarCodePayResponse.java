@@ -11,4 +11,10 @@ import lombok.Data;
  */
 @Data
 public class BarCodePayResponse extends OpenApiResponse<BarCodePayResponseData> {
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
 }

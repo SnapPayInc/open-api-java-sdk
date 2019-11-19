@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class SignHandler {
 
-    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter()).create();
+    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter()).disableHtmlEscaping().create();
 
     /**
      * Sign a request.
