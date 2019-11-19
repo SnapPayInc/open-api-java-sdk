@@ -4,9 +4,11 @@ import ca.snappay.openapi.config.BasicConfigurationHolder;
 import ca.snappay.openapi.constant.*;
 import ca.snappay.openapi.request.pay.BarCodePayRequest;
 import ca.snappay.openapi.request.pay.H5PayRequest;
+import ca.snappay.openapi.request.pay.NativePayRequest;
 import ca.snappay.openapi.request.pay.QRCodePayRequest;
 import ca.snappay.openapi.response.pay.BarCodePayResponse;
 import ca.snappay.openapi.response.pay.H5PayResponse;
+import ca.snappay.openapi.response.pay.NativePayResponse;
 import ca.snappay.openapi.response.pay.QRCodePayResponse;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Assertions;
@@ -84,6 +86,23 @@ public class DefaultOpenApiClientTest {
         Assertions.assertNotNull(response.getResult(), "Result should not be null");
         Assertions.assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
         Assertions.assertNotNull(response.getResult().getH5PaymentUrl(), "Payment URL should not be null");
+    }
+
+    @Test
+    public void testNativePay() throws OpenApiException {
+        NativePayRequest request = new NativePayRequest();
+        request.setPaymentMethod(PaymentMethod.WECHATPAY);
+        request.setOrderNo("" + System.nanoTime());
+        request.setAmount(0.01);
+        request.setDescription("test native");
+        request.setReferUrl("https://www.snappay.ca");
+
+        NativePayResponse response = client.execute(request);
+
+        Assertions.assertNotNull(response, "API request should be successful");
+        Assertions.assertEquals("E082003", response.getCode(), "Error code should be correct");
+        Assertions.assertEquals(0, response.getTotal().intValue());
+        Assertions.assertNotNull(response.getPsn(), "PSN should be given");
     }
 
 }
