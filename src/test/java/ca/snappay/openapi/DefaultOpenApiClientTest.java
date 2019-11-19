@@ -3,8 +3,10 @@ package ca.snappay.openapi;
 import ca.snappay.openapi.config.BasicConfigurationHolder;
 import ca.snappay.openapi.constant.*;
 import ca.snappay.openapi.request.order.QueryOrderRequest;
+import ca.snappay.openapi.request.order.RevokeOrderRequest;
 import ca.snappay.openapi.request.pay.*;
 import ca.snappay.openapi.response.order.QueryOrderResponse;
+import ca.snappay.openapi.response.order.RevokeOrderResponse;
 import ca.snappay.openapi.response.pay.*;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Assertions;
@@ -142,6 +144,19 @@ public class DefaultOpenApiClientTest {
         Assertions.assertNotNull(queryResponse.getResult(), "Result should not be null");
         Assertions.assertEquals(config.getMerchantNo(), queryResponse.getResult().getMerchantNo(), "Merchant number should match");
         Assertions.assertEquals(TransactionStatus.USERPAYING, queryResponse.getResult().getTransactionStatus(), "Transaction status should be correct");
+    }
+
+    @Test
+    public void testOrderRevoke() throws OpenApiException {
+        RevokeOrderRequest request = new RevokeOrderRequest();
+        request.setOrderNo("" + System.nanoTime());
+
+        RevokeOrderResponse response = client.execute(request);
+
+        Assertions.assertNotNull(response, "API request should be successful");
+        Assertions.assertEquals("E045025", response.getCode(), "Error code should be correct");
+        Assertions.assertEquals(0, response.getTotal().intValue());
+        Assertions.assertNotNull(response.getPsn(), "PSN should be given");
     }
 
 }

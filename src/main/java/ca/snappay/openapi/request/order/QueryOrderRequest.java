@@ -17,9 +17,6 @@ public class QueryOrderRequest extends AbstractOrderRequest<QueryOrderResponse> 
 
     private static final String REQUEST_METHOD = "pay.orderquery";
 
-    @SerializedName("out_order_no")
-    private String orderNo;
-
     @SerializedName("trans_no")
     private String transactionNo;
 
@@ -33,10 +30,10 @@ public class QueryOrderRequest extends AbstractOrderRequest<QueryOrderResponse> 
 
     @Override
     public void validate() {
-        if (StringUtils.isEmpty(orderNo) && StringUtils.isEmpty(transactionNo)) {
+        if (StringUtils.isEmpty(getOrderNo()) && StringUtils.isEmpty(transactionNo)) {
             throw new IllegalArgumentException("Either orderNo or transactionNo needs to be provided");
         }
-        validateLength("orderNo", orderNo, 64);
+        validateLength("orderNo", getOrderNo(), 64);
         validateLength("transactionNo", transactionNo, 32);
     }
 

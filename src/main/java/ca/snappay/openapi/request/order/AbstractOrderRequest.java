@@ -1,10 +1,10 @@
 package ca.snappay.openapi.request.order;
 
+import ca.snappay.openapi.request.ExtensionParameters;
 import ca.snappay.openapi.request.OpenApiRequest;
 import ca.snappay.openapi.response.OpenApiResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * This abstract class contains the common attributes for all order requests.
@@ -18,6 +18,9 @@ public abstract class AbstractOrderRequest<T extends OpenApiResponse> extends Op
 
     @SerializedName("out_order_no")
     private String orderNo;
+
+    @SerializedName("extension_parameters")
+    private ExtensionParameters extensionParameters;
 
     @Override
     public void validate() {
