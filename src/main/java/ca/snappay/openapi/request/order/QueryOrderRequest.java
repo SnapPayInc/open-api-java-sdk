@@ -20,9 +20,6 @@ public class QueryOrderRequest extends AbstractOrderRequest<QueryOrderResponse> 
     @SerializedName("trans_no")
     private String transactionNo;
 
-    @SerializedName("extension_parameters")
-    private ExtensionParameters extensionParameters;
-
     @Override
     public String getRequestMethod() {
         return REQUEST_METHOD;
