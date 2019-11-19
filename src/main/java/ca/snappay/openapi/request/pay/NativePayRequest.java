@@ -1,5 +1,6 @@
 package ca.snappay.openapi.request.pay;
 
+import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.response.pay.NativePayResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
@@ -25,6 +26,11 @@ public class NativePayRequest extends AbstractPayRequest<NativePayResponse> {
 
     @Override
     public void validate() {
+        super.validate();
+
+        if (getPaymentMethod() == PaymentMethod.UNIODPAY) {
+            throw new IllegalArgumentException("UnionPay does not support native payment");
+        }
         validateRequired("referUrl", referUrl);
         validateLength("referUrl", referUrl, 256);
     }

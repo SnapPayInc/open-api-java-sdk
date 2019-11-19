@@ -1,5 +1,6 @@
 package ca.snappay.openapi.request.pay;
 
+import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.response.pay.BarCodePayResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
@@ -27,6 +28,9 @@ public class BarCodePayRequest extends AbstractPayRequest<BarCodePayResponse> {
     public void validate() {
         super.validate();
 
+        if (getPaymentMethod() == PaymentMethod.UNIODPAY) {
+            throw new IllegalArgumentException("UnionPay does not support barcode payment");
+        }
         validateRequired("authCode", authCode);
         validateLength("authCode", authCode, 32);
     }
