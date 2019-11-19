@@ -2,7 +2,9 @@ package ca.snappay.openapi;
 
 import ca.snappay.openapi.config.BasicConfigurationHolder;
 import ca.snappay.openapi.constant.*;
+import ca.snappay.openapi.request.order.QueryOrderRequest;
 import ca.snappay.openapi.request.pay.*;
+import ca.snappay.openapi.response.order.QueryOrderResponse;
 import ca.snappay.openapi.response.pay.*;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Assertions;
@@ -116,6 +118,30 @@ public class DefaultOpenApiClientTest {
         Assertions.assertNotNull(response.getResult(), "Result should not be null");
         Assertions.assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
         Assertions.assertNotNull(response.getResult().getWebpayUrl(), "Payment URL should not be null");
+    }
+
+    @Test
+    public void testOrderQuery() throws OpenApiException {
+        String orderNo = "" + System.nanoTime();
+        QRCodePayRequest request = new QRCodePayRequest();
+        request.setPaymentMethod(PaymentMethod.WECHATPAY);
+        request.setOrderNo(orderNo);
+        request.setAmount(0.01);
+        request.setDescription("test qr code");
+
+        client.execute(request);
+
+        QueryOrderRequest queryRequest = new QueryOrderRequest();
+        queryRequest.setOrderNo(orderNo);
+
+        QueryOrderResponse queryResponse = client.execute(queryRequest);
+
+        Assertions.assertNotNull(queryResponse, "API request should be successful");
+        Assertions.assertEquals("0", queryResponse.getCode(), "Code should be 0");
+        Assertions.assertEquals(1, queryResponse.getTotal().intValue(), "1 result should be returned");
+        Assertions.assertNotNull(queryResponse.getResult(), "Result should not be null");
+        Assertions.assertEquals(config.getMerchantNo(), queryResponse.getResult().getMerchantNo(), "Merchant number should match");
+        Assertions.assertEquals(TransactionStatus.USERPAYING, queryResponse.getResult().getTransactionStatus(), "Transaction status should be correct");
     }
 
 }
