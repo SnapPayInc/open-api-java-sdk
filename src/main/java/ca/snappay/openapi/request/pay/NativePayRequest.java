@@ -4,6 +4,7 @@ import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.response.pay.NativePayResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * The request for native payment.
@@ -12,6 +13,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public class NativePayRequest extends AbstractPayRequest<NativePayResponse> {
 
     private static final String REQUEST_METHOD = "pay.inapppay";

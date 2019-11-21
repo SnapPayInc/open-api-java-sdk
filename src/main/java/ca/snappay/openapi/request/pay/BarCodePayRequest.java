@@ -4,6 +4,7 @@ import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.response.pay.BarCodePayResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * The request for barcode payment.
@@ -12,6 +13,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public class BarCodePayRequest extends AbstractPayRequest<BarCodePayResponse> {
 
     private static final String REQUEST_METHOD = "pay.barcodepay";

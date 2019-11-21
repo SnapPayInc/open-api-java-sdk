@@ -2,6 +2,7 @@ package ca.snappay.openapi.response.pay;
 
 import ca.snappay.openapi.response.OpenApiResponse;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * The response for native payment.
@@ -10,11 +11,6 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public class NativePayResponse extends OpenApiResponse<NativePayResponseData> {
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
 }

@@ -3,6 +3,7 @@ package ca.snappay.openapi.response.order;
 import ca.snappay.openapi.constant.TransactionStatus;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public class RefundOrderResponseData extends AbstractOrderResponseData {
 
     @SerializedName("out_refund_no")

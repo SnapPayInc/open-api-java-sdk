@@ -4,6 +4,7 @@ import ca.snappay.openapi.request.ExtensionParameters;
 import ca.snappay.openapi.response.order.QueryOrderResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -13,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public class QueryOrderRequest extends AbstractOrderRequest<QueryOrderResponse> {
 
     private static final String REQUEST_METHOD = "pay.orderquery";

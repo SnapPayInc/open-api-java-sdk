@@ -7,6 +7,7 @@ import ca.snappay.openapi.request.OpenApiRequest;
 import ca.snappay.openapi.response.misc.QueryExchangeRateResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * The request for exchange rate query.
@@ -15,6 +16,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public class QueryExchangeRateRequest extends OpenApiRequest<QueryExchangeRateResponse> {
 
     private static final String REQUEST_METHOD = "pay.exchangerate";
