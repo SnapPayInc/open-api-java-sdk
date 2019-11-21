@@ -37,7 +37,7 @@ public class WebsitePayRequest extends AbstractPayRequest<WebsitePayResponse> {
         if (getPaymentMethod() == PaymentMethod.WECHATPAY) {
             throw new IllegalArgumentException("WeChatPay does not support website payment");
         }
-        if (getPaymentMethod() == PaymentMethod.UNIODPAY && browserType == BrowserType.WAP) {
+        if (getPaymentMethod() == PaymentMethod.UNIONPAY && browserType == BrowserType.WAP) {
             throw new IllegalArgumentException("UnionPay does not support WAP browser");
         }
         validateLength("returnUrl", returnUrl, 256);

@@ -44,7 +44,7 @@ public class QueryExchangeRateRequest extends OpenApiRequest<QueryExchangeRateRe
     public void validate() {
         validateRequired("currency", currency);
         validateRequired("paymentMethod", paymentMethod);
-        if (paymentMethod == PaymentMethod.UNIODPAY) {
+        if (paymentMethod == PaymentMethod.UNIONPAY) {
             throw new IllegalArgumentException("UnionPay does not support exchange rate query");
         }
     }

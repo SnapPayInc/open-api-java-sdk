@@ -26,7 +26,7 @@ public class QRCodePayRequest extends AbstractPayRequest<QRCodePayResponse> {
     public void validate() {
         super.validate();
 
-        if (getPaymentMethod() == PaymentMethod.UNIODPAY) {
+        if (getPaymentMethod() == PaymentMethod.UNIONPAY) {
             throw new IllegalArgumentException("UnionPay does not support QR code payment");
         }
     }

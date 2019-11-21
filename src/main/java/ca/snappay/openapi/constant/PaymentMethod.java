@@ -12,6 +12,6 @@ public enum PaymentMethod {
 
     WECHATPAY,
 
-    UNIODPAY;
+    UNIONPAY;
 
 }

@@ -30,7 +30,7 @@ public class BarCodePayRequest extends AbstractPayRequest<BarCodePayResponse> {
     public void validate() {
         super.validate();
 
-        if (getPaymentMethod() == PaymentMethod.UNIODPAY) {
+        if (getPaymentMethod() == PaymentMethod.UNIONPAY) {
             throw new IllegalArgumentException("UnionPay does not support barcode payment");
         }
         validateRequired("authCode", authCode);

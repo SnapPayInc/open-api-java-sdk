@@ -30,7 +30,7 @@ public class NativePayRequest extends AbstractPayRequest<NativePayResponse> {
     public void validate() {
         super.validate();
 
-        if (getPaymentMethod() == PaymentMethod.UNIODPAY) {
+        if (getPaymentMethod() == PaymentMethod.UNIONPAY) {
             throw new IllegalArgumentException("UnionPay does not support native payment");
         }
         validateRequired("referUrl", referUrl);
