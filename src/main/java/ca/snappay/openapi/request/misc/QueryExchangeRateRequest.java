@@ -7,6 +7,7 @@ import ca.snappay.openapi.request.OpenApiRequest;
 import ca.snappay.openapi.response.misc.QueryExchangeRateResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * The request for exchange rate query.
@@ -15,6 +16,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public class QueryExchangeRateRequest extends OpenApiRequest<QueryExchangeRateResponse> {
 
     private static final String REQUEST_METHOD = "pay.exchangerate";
@@ -42,7 +44,7 @@ public class QueryExchangeRateRequest extends OpenApiRequest<QueryExchangeRateRe
     public void validate() {
         validateRequired("currency", currency);
         validateRequired("paymentMethod", paymentMethod);
-        if (paymentMethod == PaymentMethod.UNIODPAY) {
+        if (paymentMethod == PaymentMethod.UNIONPAY) {
             throw new IllegalArgumentException("UnionPay does not support exchange rate query");
         }
     }

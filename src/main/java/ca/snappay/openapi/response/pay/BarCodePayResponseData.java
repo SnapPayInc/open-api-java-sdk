@@ -6,6 +6,7 @@ import ca.snappay.openapi.constant.PaymentOperationMethod;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public class BarCodePayResponseData extends AbstractPayResponseData {
 
     @SerializedName("payment_method")

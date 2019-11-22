@@ -3,6 +3,7 @@ package ca.snappay.openapi.request.order;
 import ca.snappay.openapi.response.order.RefundOrderResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * The response for order refund.
@@ -11,6 +12,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public class RefundOrderRequest extends AbstractOrderRequest<RefundOrderResponse> {
 
     private static final String REQUEST_METHOD = "pay.orderrefund";

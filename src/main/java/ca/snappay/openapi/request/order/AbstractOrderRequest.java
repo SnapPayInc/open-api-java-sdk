@@ -5,6 +5,7 @@ import ca.snappay.openapi.request.OpenApiRequest;
 import ca.snappay.openapi.response.OpenApiResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * This abstract class contains the common attributes for all order requests.
@@ -14,6 +15,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public abstract class AbstractOrderRequest<T extends OpenApiResponse> extends OpenApiRequest<T> {
 
     @SerializedName("out_order_no")

@@ -34,7 +34,8 @@ import java.util.List;
  * The default implementation of <code>OpenApiClient</code> using Apache HttpClient.
  *
  * @author shawndu
- * @version 1.0
+ * @version 1.1
+ * @since 1.0
  */
 public class DefaultOpenApiClient implements OpenApiClient {
 
@@ -134,6 +135,15 @@ public class DefaultOpenApiClient implements OpenApiClient {
         // convert to response object
         T resp = SignHandler.GSON.fromJson(resultJson, request.getResponseClass());
         return resp;
+    }
+
+    /**
+     * Gets the configuration used by this client.
+     *
+     * @return the configuration.
+     */
+    public ConfigurationHolder getConfig() {
+        return config;
     }
 
     private void buildCommonParameters(String requestMethod, boolean needMerchant, JsonObject requestParams) {

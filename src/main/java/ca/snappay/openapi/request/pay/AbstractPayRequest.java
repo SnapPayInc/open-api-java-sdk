@@ -8,6 +8,7 @@ import ca.snappay.openapi.response.OpenApiResponse;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * This abstract class contains the common attributes for all payment requests.
@@ -17,6 +18,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public abstract class AbstractPayRequest<T extends OpenApiResponse> extends OpenApiRequest<T> {
 
     @SerializedName("payment_method")
