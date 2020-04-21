@@ -16,7 +16,7 @@ import lombok.ToString;
 public class NativePayResponseData extends AbstractPayResponseData {
 
     @SerializedName("sdk_params")
-    private JsonObject sdkParams;
+    private String sdkParams;
 
     @SerializedName("trade_no")
     private String tradeNo;

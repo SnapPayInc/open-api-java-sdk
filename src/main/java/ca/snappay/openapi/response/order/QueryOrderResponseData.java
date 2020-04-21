@@ -17,6 +17,6 @@ import lombok.ToString;
 public class QueryOrderResponseData extends BarCodePayResponseData {
 
     @SerializedName("attach")
-    private JsonObject attach;
+    private String attach;
 
 }
