@@ -1,5 +1,6 @@
 package ca.snappay.openapi.request.pay;
 
+import java.util.EnumSet;
 import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.response.pay.QRCodePayResponse;
 import lombok.Data;
@@ -23,11 +24,7 @@ public class QRCodePayRequest extends AbstractPayRequest<QRCodePayResponse> {
     }
 
     @Override
-    public void validate() {
-        super.validate();
-
-        if (getPaymentMethod() == PaymentMethod.UNIONPAY) {
-            throw new IllegalArgumentException("UnionPay does not support QR code payment");
-        }
+    protected EnumSet<PaymentMethod> applicablePaymentMethods() {
+        return EnumSet.of(PaymentMethod.ALIPAY, PaymentMethod.WECHATPAY, PaymentMethod.UNIONPAY_QR);
     }
 }

@@ -2,6 +2,7 @@ package ca.snappay.openapi.request.pay;
 
 import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.response.pay.NativePayResponse;
+import java.util.EnumSet;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.ToString;
@@ -30,11 +31,13 @@ public class NativePayRequest extends AbstractPayRequest<NativePayResponse> {
     public void validate() {
         super.validate();
 
-        if (getPaymentMethod() == PaymentMethod.UNIONPAY) {
-            throw new IllegalArgumentException("UnionPay does not support native payment");
-        }
         validateRequired("referUrl", referUrl);
         validateLength("referUrl", referUrl, 256);
+    }
+
+    @Override
+    protected EnumSet<PaymentMethod> applicablePaymentMethods() {
+        return EnumSet.of(PaymentMethod.ALIPAY, PaymentMethod.WECHATPAY);
     }
 
 }

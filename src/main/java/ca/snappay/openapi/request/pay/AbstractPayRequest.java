@@ -5,6 +5,7 @@ import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.request.ExtensionParameters;
 import ca.snappay.openapi.request.OpenApiRequest;
 import ca.snappay.openapi.response.OpenApiResponse;
+import java.util.EnumSet;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
@@ -52,7 +53,10 @@ public abstract class AbstractPayRequest<T extends OpenApiResponse> extends Open
 
     @Override
     public void validate() {
-        validateRequired("paymentMethod", paymentMethod);
+        if (isPaymentMethodRequired()) {
+            validateRequired("paymentMethod", paymentMethod);
+            validatePaymentMethod();
+        }
         validateRequired("orderNo", orderNo);
         validateLength("orderNo", orderNo, 64);
         validateRequired("amount", amount);
@@ -65,9 +69,26 @@ public abstract class AbstractPayRequest<T extends OpenApiResponse> extends Open
         if (effectiveMinutes != null) {
             validateRange("effectiveMinutes", effectiveMinutes.intValue(), 5, 60);
         }
-        if (extensionParameters != null) {
+        if (extensionParameters != null && extensionParameters.getStoreNo() != null) {
             validateLength("extensionParameters.storeNo", extensionParameters.getStoreNo(), 8);
         }
+    }
+
+    private void validatePaymentMethod() {
+        if (paymentMethod != null && !applicablePaymentMethods().contains(paymentMethod)) {
+            throw new IllegalArgumentException("Given payment_method is not applicable");
+        }
+    }
+
+    /**
+     * Returns the set of applicable payment methods. If the client gives a payment method that is not applicable
+     * for the type of payment, an error will return.
+     * 
+     */
+    abstract protected EnumSet<PaymentMethod> applicablePaymentMethods();
+
+    protected boolean isPaymentMethodRequired() {
+        return true;
     }
 
 }
