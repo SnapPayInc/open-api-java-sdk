@@ -52,7 +52,7 @@ public abstract class AbstractPayRequest<T extends OpenApiResponse> extends Open
 
     @Override
     public void validate() {
-        validateRequired("paymentMethod", paymentMethod);
+//        validateRequired("paymentMethod", paymentMethod);
         validateRequired("orderNo", orderNo);
         validateLength("orderNo", orderNo, 64);
         validateRequired("amount", amount);
@@ -69,5 +69,4 @@ public abstract class AbstractPayRequest<T extends OpenApiResponse> extends Open
             validateLength("extensionParameters.storeNo", extensionParameters.getStoreNo(), 8);
         }
     }
-
 }

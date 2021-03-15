@@ -142,7 +142,7 @@ public class SignHandler {
         }
     }
 
-    private static String createLinkString(JsonObject params) {
+    public static String createLinkString(JsonObject params) {
         params = paraFilter(params).getAsJsonObject();
 
         List<String> keys = new ArrayList<>(params.keySet());

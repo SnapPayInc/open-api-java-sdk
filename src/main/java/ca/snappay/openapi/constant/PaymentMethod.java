@@ -12,6 +12,10 @@ public enum PaymentMethod {
 
     WECHATPAY,
 
-    UNIONPAY;
+    UNIONPAY,
+
+    UNIONPAY_QR,
+
+    SNAPLII;
 
 }

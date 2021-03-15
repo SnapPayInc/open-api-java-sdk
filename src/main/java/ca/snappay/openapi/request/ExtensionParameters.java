@@ -15,4 +15,6 @@ public class ExtensionParameters {
     @SerializedName("store_no")
     private String storeNo;
 
+    @SerializedName("qrcode_pic_size")
+    private String qrcodePicSize;
 }
