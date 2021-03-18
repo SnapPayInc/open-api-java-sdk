@@ -2,6 +2,7 @@ package ca.snappay.openapi;
 
 import ca.snappay.openapi.config.BasicConfigurationHolder;
 import ca.snappay.openapi.constant.*;
+import ca.snappay.openapi.request.ExtensionParameters;
 import ca.snappay.openapi.request.misc.QueryExchangeRateRequest;
 import ca.snappay.openapi.request.order.QueryOrderRequest;
 import ca.snappay.openapi.request.order.RefundOrderRequest;
@@ -72,6 +73,29 @@ public class DefaultOpenApiClientTest {
     }
 
     @Test
+    public void testQRCodePay_UnionPayQR() throws OpenApiException {
+        QRCodePayRequest request = new QRCodePayRequest();
+        request.setPaymentMethod(PaymentMethod.UNIONPAY_QR);
+        request.setOrderNo("" + System.nanoTime());
+        request.setAmount(0.01);
+        request.setDescription("test qr code");
+        ExtensionParameters params = new ExtensionParameters();
+        params.setStoreNo("80521386");
+        params.setQrCodeWidth(250);
+        params.setQrCodeHeight(250);
+        request.setExtensionParameters(params);
+
+        QRCodePayResponse response = client.execute(request);
+
+        Assertions.assertNotNull(response, "API request should be successful");
+        Assertions.assertEquals("0", response.getCode(), "Code should be 0");
+        Assertions.assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
+        Assertions.assertNotNull(response.getResult(), "Result should not be null");
+        Assertions.assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
+        Assertions.assertEquals(TransactionStatus.USERPAYING, response.getResult().getTransactionStatus(), "Transaction status should be correct");
+    }
+
+    @Test
     public void testH5Pay() throws OpenApiException {
         H5PayRequest request = new H5PayRequest();
         request.setPaymentMethod(PaymentMethod.WECHATPAY);
@@ -102,7 +126,7 @@ public class DefaultOpenApiClientTest {
         NativePayResponse response = client.execute(request);
 
         Assertions.assertNotNull(response, "API request should be successful");
-        Assertions.assertEquals("E082003", response.getCode(), "Error code should be correct");
+        Assertions.assertEquals("E045048", response.getCode(), "Error code should be correct");
         Assertions.assertEquals(0, response.getTotal().intValue());
         Assertions.assertNotNull(response.getPsn(), "PSN should be given");
     }
