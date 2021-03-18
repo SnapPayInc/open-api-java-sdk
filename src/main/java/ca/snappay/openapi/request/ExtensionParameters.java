@@ -1,6 +1,10 @@
 package ca.snappay.openapi.request;
 
-import com.google.gson.annotations.SerializedName;
+import java.lang.reflect.Type;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import lombok.Data;
 
 /**
@@ -12,7 +16,31 @@ import lombok.Data;
 @Data
 public class ExtensionParameters {
 
-    @SerializedName("store_no")
     private String storeNo;
 
+    private Integer qrCodeWidth;
+
+    private Integer qrCodeHeight;
+    
+    public static class ExtensionParametersJsonSerializer
+        implements JsonSerializer<ExtensionParameters> {
+
+        @Override
+        public JsonElement serialize(ExtensionParameters src, Type typeOfSrc,
+                JsonSerializationContext context) {
+            StringBuilder sb = new StringBuilder("{");
+            if (src.storeNo != null) {
+                sb.append("\\\"store_no\\\":\\\"" + src.storeNo + "\\\",");
+            }
+            if (src.qrCodeWidth != null) {
+                sb.append("\\\"qrcode_pic_size\\\":\\\"" + src.qrCodeWidth + ", " + src.qrCodeHeight + "\\\",");
+            }
+            if (sb.length() > 1) {
+                sb.deleteCharAt(sb.length() - 1);
+            }
+            sb.append("}");
+            return new JsonPrimitive(sb.toString());
+        }
+
+    }
 }

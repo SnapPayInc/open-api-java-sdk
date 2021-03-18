@@ -3,6 +3,7 @@ package ca.snappay.openapi.sign;
 import ca.snappay.openapi.LocalDateTimeTypeAdapter;
 import ca.snappay.openapi.config.ConfigurationHolder;
 import ca.snappay.openapi.constant.Constants;
+import ca.snappay.openapi.request.ExtensionParameters;
 import com.google.gson.*;
 import org.apache.commons.lang.StringUtils;
 
@@ -19,7 +20,10 @@ import java.util.List;
  */
 public class SignHandler {
 
-    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter()).disableHtmlEscaping().create();
+    public static final Gson GSON =
+        new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+            .registerTypeAdapter(ExtensionParameters.class, new ExtensionParameters.ExtensionParametersJsonSerializer())
+            .disableHtmlEscaping().create();
 
     /**
      * Sign a request.
