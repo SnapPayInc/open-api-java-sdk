@@ -69,8 +69,18 @@ public abstract class AbstractPayRequest<T extends OpenApiResponse> extends Open
         if (effectiveMinutes != null) {
             validateRange("effectiveMinutes", effectiveMinutes.intValue(), 5, 60);
         }
-        if (extensionParameters != null && extensionParameters.getStoreNo() != null) {
-            validateLength("extensionParameters.storeNo", extensionParameters.getStoreNo(), 8);
+        if (extensionParameters != null) {
+            if (extensionParameters.getStoreNo() != null) {
+                validateLength("extensionParameters.storeNo", extensionParameters.getStoreNo(), 8);
+            }
+            if (extensionParameters.getQrCodeHeight() != null) {
+                validateRange("extensionParameters.qrCodeHeight", extensionParameters.getQrCodeHeight(), 200, 400);
+                validateRequired("extensionParameters.qrCodeWidth", extensionParameters.getQrCodeWidth());
+            }
+            if (extensionParameters.getQrCodeWidth() != null) {
+                validateRange("extensionParameters.qrCodeWidth", extensionParameters.getQrCodeWidth(), 200, 400);
+                validateRequired("extensionParameters.qrCodeHeight", extensionParameters.getQrCodeHeight());
+            }
         }
     }
 
