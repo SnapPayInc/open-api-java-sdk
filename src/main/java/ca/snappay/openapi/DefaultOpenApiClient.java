@@ -6,11 +6,13 @@ import ca.snappay.openapi.config.provider.DefaultConfigurationProvider;
 import ca.snappay.openapi.request.OpenApiRequest;
 import ca.snappay.openapi.request.pay.BarCodePayRequest;
 import ca.snappay.openapi.request.pay.H5PayRequest;
+import ca.snappay.openapi.request.pay.MiniPayRequest;
 import ca.snappay.openapi.request.pay.NativePayRequest;
 import ca.snappay.openapi.request.pay.QRCodePayRequest;
 import ca.snappay.openapi.request.pay.WebsitePayRequest;
 import ca.snappay.openapi.response.pay.BarCodePayResponse;
 import ca.snappay.openapi.response.pay.H5PayResponse;
+import ca.snappay.openapi.response.pay.MiniPayResponse;
 import ca.snappay.openapi.response.pay.NativePayResponse;
 import ca.snappay.openapi.response.pay.QRCodePayResponse;
 import ca.snappay.openapi.response.pay.WebsitePayResponse;
@@ -105,6 +107,11 @@ public class DefaultOpenApiClient implements OpenApiClient {
 
     @Override
     public WebsitePayResponse websitePay(WebsitePayRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public MiniPayResponse miniPay(MiniPayRequest request) throws OpenApiException {
         return execute(request);
     }
 

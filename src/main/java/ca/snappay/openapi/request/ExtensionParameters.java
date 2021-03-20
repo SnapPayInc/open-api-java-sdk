@@ -18,6 +18,8 @@ public class ExtensionParameters {
 
     private String storeNo;
 
+    private String subAppId;
+
     private Integer qrCodeWidth;
 
     private Integer qrCodeHeight;
@@ -30,10 +32,14 @@ public class ExtensionParameters {
                 JsonSerializationContext context) {
             StringBuilder sb = new StringBuilder("{");
             if (src.storeNo != null) {
-                sb.append("\\\"store_no\\\":\\\"" + src.storeNo + "\\\",");
+                sb.append("\\\"store_no\\\":\\\"").append(src.storeNo).append("\\\",");
+            }
+            if (src.subAppId != null) {
+                sb.append("\\\"sub_app_id\\\":\\\"").append(src.subAppId).append("\\\",");
             }
             if (src.qrCodeWidth != null) {
-                sb.append("\\\"qrcode_pic_size\\\":\\\"" + src.qrCodeWidth + ", " + src.qrCodeHeight + "\\\",");
+                sb.append("\\\"qrcode_pic_size\\\":\\\"").append(src.qrCodeWidth).append(", ").append(src.qrCodeHeight)
+                    .append("\\\",");
             }
             if (sb.length() > 1) {
                 sb.deleteCharAt(sb.length() - 1);

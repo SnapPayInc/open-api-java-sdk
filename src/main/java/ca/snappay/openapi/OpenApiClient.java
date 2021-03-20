@@ -2,11 +2,13 @@ package ca.snappay.openapi;
 
 import ca.snappay.openapi.request.pay.BarCodePayRequest;
 import ca.snappay.openapi.request.pay.H5PayRequest;
+import ca.snappay.openapi.request.pay.MiniPayRequest;
 import ca.snappay.openapi.request.pay.NativePayRequest;
 import ca.snappay.openapi.request.pay.QRCodePayRequest;
 import ca.snappay.openapi.request.pay.WebsitePayRequest;
 import ca.snappay.openapi.response.pay.BarCodePayResponse;
 import ca.snappay.openapi.response.pay.H5PayResponse;
+import ca.snappay.openapi.response.pay.MiniPayResponse;
 import ca.snappay.openapi.response.pay.NativePayResponse;
 import ca.snappay.openapi.response.pay.QRCodePayResponse;
 import ca.snappay.openapi.response.pay.WebsitePayResponse;
@@ -73,5 +75,16 @@ public interface OpenApiClient {
      *      API Documentation</a>
      */
     WebsitePayResponse websitePay(WebsitePayRequest request) throws OpenApiException;
+
+    /**
+     * Make mini payment.
+     *
+     * @param request the request.
+     * @return the response.
+     * @throws OpenApiException if any error occurred.
+     * @see <a href="https://developer.snappay.ca/openapi.html#pay-apis-mini-program-api-post">
+     *      API Documentation</a>
+     */
+    MiniPayResponse miniPay(MiniPayRequest request) throws OpenApiException;
 
 }
