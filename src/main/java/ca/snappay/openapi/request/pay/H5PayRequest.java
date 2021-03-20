@@ -6,6 +6,7 @@ import ca.snappay.openapi.response.pay.H5PayResponse;
 import java.util.EnumSet;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -15,6 +16,7 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class H5PayRequest extends AbstractPayRequest<H5PayResponse> {
 
@@ -32,6 +34,13 @@ public class H5PayRequest extends AbstractPayRequest<H5PayResponse> {
     @Override
     public String getRequestMethod() {
         return REQUEST_METHOD;
+    }
+
+    public H5PayRequest(PaymentMethod paymentMethod, String orderNo, Double amount, String description) {
+        setPaymentMethod(paymentMethod);
+        setOrderNo(orderNo);
+        setAmount(amount);
+        setDescription(description);
     }
 
     @Override

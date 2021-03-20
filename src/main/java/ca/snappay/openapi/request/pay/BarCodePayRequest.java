@@ -5,6 +5,7 @@ import ca.snappay.openapi.response.pay.BarCodePayResponse;
 import java.util.EnumSet;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -14,6 +15,7 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class BarCodePayRequest extends AbstractPayRequest<BarCodePayResponse> {
 
@@ -25,6 +27,13 @@ public class BarCodePayRequest extends AbstractPayRequest<BarCodePayResponse> {
     @Override
     public String getRequestMethod() {
         return REQUEST_METHOD;
+    }
+
+    public BarCodePayRequest(String orderNo, Double amount, String description, String authCode) {
+        setOrderNo(orderNo);
+        setAmount(amount);
+        setDescription(description);
+        this.authCode = authCode;
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.EnumSet;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -19,8 +20,9 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
-public abstract class AbstractPayRequest<T extends OpenApiResponse> extends OpenApiRequest<T> {
+public abstract class AbstractPayRequest<T extends OpenApiResponse<?>> extends OpenApiRequest<T> {
 
     @SerializedName("payment_method")
     private PaymentMethod paymentMethod;

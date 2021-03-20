@@ -6,6 +6,7 @@ import ca.snappay.openapi.response.pay.WebsitePayResponse;
 import java.util.EnumSet;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -15,6 +16,7 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class WebsitePayRequest extends AbstractPayRequest<WebsitePayResponse> {
 
@@ -30,6 +32,13 @@ public class WebsitePayRequest extends AbstractPayRequest<WebsitePayResponse> {
     public String getRequestMethod() {
         return REQUEST_METHOD;
     }
+
+    public WebsitePayRequest(PaymentMethod paymentMethod, String orderNo, Double amount, String description) {
+      setPaymentMethod(paymentMethod);
+      setOrderNo(orderNo);
+      setAmount(amount);
+      setDescription(description);
+  }
 
     @Override
     public void validate() {

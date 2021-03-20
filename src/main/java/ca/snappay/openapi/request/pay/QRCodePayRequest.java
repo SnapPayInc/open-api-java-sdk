@@ -4,6 +4,7 @@ import java.util.EnumSet;
 import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.response.pay.QRCodePayResponse;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -13,6 +14,7 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class QRCodePayRequest extends AbstractPayRequest<QRCodePayResponse> {
 
@@ -21,6 +23,13 @@ public class QRCodePayRequest extends AbstractPayRequest<QRCodePayResponse> {
     @Override
     public String getRequestMethod() {
         return REQUEST_METHOD;
+    }
+
+    public QRCodePayRequest(PaymentMethod paymentMethod, String orderNo, Double amount, String description) {
+        setPaymentMethod(paymentMethod);
+        setOrderNo(orderNo);
+        setAmount(amount);
+        setDescription(description);
     }
 
     @Override
