@@ -4,6 +4,10 @@ import ca.snappay.openapi.config.ConfigurationHolder;
 import ca.snappay.openapi.config.OpenApiConfigurationExcepiton;
 import ca.snappay.openapi.config.provider.DefaultConfigurationProvider;
 import ca.snappay.openapi.request.OpenApiRequest;
+import ca.snappay.openapi.request.misc.QueryExchangeRateRequest;
+import ca.snappay.openapi.request.order.QueryOrderRequest;
+import ca.snappay.openapi.request.order.RefundOrderRequest;
+import ca.snappay.openapi.request.order.RevokeOrderRequest;
 import ca.snappay.openapi.request.pay.BarCodePayRequest;
 import ca.snappay.openapi.request.pay.H5PayRequest;
 import ca.snappay.openapi.request.pay.MiniPayRequest;
@@ -19,6 +23,10 @@ import ca.snappay.openapi.response.pay.WebsitePayResponse;
 import ca.snappay.openapi.sign.SignHandler;
 import ca.snappay.openapi.constant.Constants;
 import ca.snappay.openapi.response.OpenApiResponse;
+import ca.snappay.openapi.response.misc.QueryExchangeRateResponse;
+import ca.snappay.openapi.response.order.QueryOrderResponse;
+import ca.snappay.openapi.response.order.RefundOrderResponse;
+import ca.snappay.openapi.response.order.RevokeOrderResponse;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.lang.StringUtils;
@@ -67,7 +75,8 @@ public class DefaultOpenApiClient implements OpenApiClient {
         this.config = config;
         this.config.validate();
 
-        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(config.getConnectionTimeout()).build();
+        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(config.getConnectionTimeout() * 1000)
+                .setSocketTimeout(config.getReadTimeout() * 1000).build();
         httpClient = HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
         try {
             requestUri = new URIBuilder().setScheme("https").setHost(config.getGatewayHost()).setPath(GATEWAY_PATH).build();
@@ -112,6 +121,26 @@ public class DefaultOpenApiClient implements OpenApiClient {
 
     @Override
     public MiniPayResponse miniPay(MiniPayRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public QueryOrderResponse queryOrder(QueryOrderRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public RevokeOrderResponse revokeOrder(RevokeOrderRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public RefundOrderResponse refundOrder(RefundOrderRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public QueryExchangeRateResponse queryExchangeRate(QueryExchangeRateRequest request) throws OpenApiException {
         return execute(request);
     }
 

@@ -12,6 +12,7 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@ToString(callSuper = true)
 public class QueryExchangeRateResponseData implements OpenApiResponseData {
 
     @SerializedName("exchange_rate")

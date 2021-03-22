@@ -7,6 +7,7 @@ import ca.snappay.openapi.request.OpenApiRequest;
 import ca.snappay.openapi.response.misc.QueryExchangeRateResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -16,6 +17,7 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class QueryExchangeRateRequest extends OpenApiRequest<QueryExchangeRateResponse> {
 
@@ -44,8 +46,8 @@ public class QueryExchangeRateRequest extends OpenApiRequest<QueryExchangeRateRe
     public void validate() {
         validateRequired("currency", currency);
         validateRequired("paymentMethod", paymentMethod);
-        if (paymentMethod == PaymentMethod.UNIONPAY) {
-            throw new IllegalArgumentException("UnionPay does not support exchange rate query");
+        if (paymentMethod != PaymentMethod.ALIPAY && paymentMethod != PaymentMethod.WECHATPAY) {
+            throw new IllegalArgumentException("Given payment_method is not applicable");
         }
     }
 }

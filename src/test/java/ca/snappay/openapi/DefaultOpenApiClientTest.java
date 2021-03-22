@@ -36,17 +36,13 @@ public class DefaultOpenApiClientTest {
 
     @Test
     public void testBarCodePay() throws OpenApiException {
-        BarCodePayRequest request = new BarCodePayRequest();
-        request.setPaymentMethod(PaymentMethod.WECHATPAY);
-        request.setOrderNo("" + System.nanoTime());
-        request.setAmount(0.01);
-        request.setAuthCode("134732675710524877");
-        request.setDescription("test barcode");
+        BarCodePayRequest request = new BarCodePayRequest("" + System.nanoTime(), 0.01, "test barcode",
+                "134732675710524877");
         JsonObject attach = new JsonObject();
         attach.addProperty("test", "value");
         request.setAttach(attach);
 
-        BarCodePayResponse response = client.execute(request);
+        BarCodePayResponse response = client.barCodePay(request);
 
         Assertions.assertNotNull(response, "API request should be successful");
         Assertions.assertEquals("E062004", response.getCode(), "Error code should be correct");
@@ -56,13 +52,10 @@ public class DefaultOpenApiClientTest {
 
     @Test
     public void testQRCodePay() throws OpenApiException {
-        QRCodePayRequest request = new QRCodePayRequest();
-        request.setPaymentMethod(PaymentMethod.WECHATPAY);
-        request.setOrderNo("" + System.nanoTime());
-        request.setAmount(0.01);
-        request.setDescription("test qr code");
+        QRCodePayRequest request = new QRCodePayRequest(PaymentMethod.WECHATPAY, "" + System.nanoTime(), 0.01,
+                "test qr code");
 
-        QRCodePayResponse response = client.execute(request);
+        QRCodePayResponse response = client.qrCodePay(request);
 
         Assertions.assertNotNull(response, "API request should be successful");
         Assertions.assertEquals("0", response.getCode(), "Code should be 0");
@@ -74,18 +67,15 @@ public class DefaultOpenApiClientTest {
 
     @Test
     public void testQRCodePay_UnionPayQR() throws OpenApiException {
-        QRCodePayRequest request = new QRCodePayRequest();
-        request.setPaymentMethod(PaymentMethod.UNIONPAY_QR);
-        request.setOrderNo("" + System.nanoTime());
-        request.setAmount(0.01);
-        request.setDescription("test qr code");
+        QRCodePayRequest request = new QRCodePayRequest(PaymentMethod.UNIONPAY_QR, "" + System.nanoTime(), 0.01,
+                "test qr code");
         ExtensionParameters params = new ExtensionParameters();
         params.setStoreNo("80521386");
         params.setQrCodeWidth(250);
         params.setQrCodeHeight(250);
         request.setExtensionParameters(params);
 
-        QRCodePayResponse response = client.execute(request);
+        QRCodePayResponse response = client.qrCodePay(request);
 
         Assertions.assertNotNull(response, "API request should be successful");
         Assertions.assertEquals("0", response.getCode(), "Code should be 0");
@@ -97,14 +87,10 @@ public class DefaultOpenApiClientTest {
 
     @Test
     public void testH5Pay() throws OpenApiException {
-        H5PayRequest request = new H5PayRequest();
-        request.setPaymentMethod(PaymentMethod.WECHATPAY);
+        H5PayRequest request = new H5PayRequest(PaymentMethod.WECHATPAY, "" + System.nanoTime(), 0.01, "test h5");
         request.setTradeType(PaymentChannelTradeType.MWEB);
-        request.setOrderNo("" + System.nanoTime());
-        request.setAmount(0.01);
-        request.setDescription("test h5");
 
-        H5PayResponse response = client.execute(request);
+        H5PayResponse response = client.h5Pay(request);
 
         Assertions.assertNotNull(response, "API request should be successful");
         Assertions.assertEquals("0", response.getCode(), "Code should be 0");
@@ -116,14 +102,11 @@ public class DefaultOpenApiClientTest {
 
     @Test
     public void testNativePay() throws OpenApiException {
-        NativePayRequest request = new NativePayRequest();
-        request.setPaymentMethod(PaymentMethod.WECHATPAY);
-        request.setOrderNo("" + System.nanoTime());
-        request.setAmount(0.01);
-        request.setDescription("test native");
+        NativePayRequest request = new NativePayRequest(PaymentMethod.WECHATPAY, "" + System.nanoTime(), 0.01,
+                "test native");
         request.setReferUrl("https://www.snappay.ca");
 
-        NativePayResponse response = client.execute(request);
+        NativePayResponse response = client.nativePay(request);
 
         Assertions.assertNotNull(response, "API request should be successful");
         Assertions.assertEquals("E045048", response.getCode(), "Error code should be correct");
@@ -133,14 +116,11 @@ public class DefaultOpenApiClientTest {
 
     @Test
     public void testWebsitePay() throws OpenApiException {
-        WebsitePayRequest request = new WebsitePayRequest();
-        request.setPaymentMethod(PaymentMethod.ALIPAY);
+        WebsitePayRequest request = new WebsitePayRequest(PaymentMethod.ALIPAY, "" + System.nanoTime(), 0.01,
+                "test web");
         request.setBrowserType(BrowserType.PC);
-        request.setOrderNo("" + System.nanoTime());
-        request.setAmount(0.01);
-        request.setDescription("test web");
 
-        WebsitePayResponse response = client.execute(request);
+        WebsitePayResponse response = client.websitePay(request);
 
         Assertions.assertNotNull(response, "API request should be successful");
         Assertions.assertEquals("0", response.getCode(), "Code should be 0");
@@ -153,18 +133,14 @@ public class DefaultOpenApiClientTest {
     @Test
     public void testOrderQuery() throws OpenApiException {
         String orderNo = "" + System.nanoTime();
-        QRCodePayRequest request = new QRCodePayRequest();
-        request.setPaymentMethod(PaymentMethod.WECHATPAY);
-        request.setOrderNo(orderNo);
-        request.setAmount(0.01);
-        request.setDescription("test qr code");
+        QRCodePayRequest request = new QRCodePayRequest(PaymentMethod.WECHATPAY, orderNo, 0.01, "test qr code");
 
-        client.execute(request);
+        client.qrCodePay(request);
 
         QueryOrderRequest queryRequest = new QueryOrderRequest();
         queryRequest.setOrderNo(orderNo);
 
-        QueryOrderResponse queryResponse = client.execute(queryRequest);
+        QueryOrderResponse queryResponse = client.queryOrder(queryRequest);
 
         Assertions.assertNotNull(queryResponse, "API request should be successful");
         Assertions.assertEquals("0", queryResponse.getCode(), "Code should be 0");
@@ -179,7 +155,7 @@ public class DefaultOpenApiClientTest {
         RevokeOrderRequest request = new RevokeOrderRequest();
         request.setOrderNo("" + System.nanoTime());
 
-        RevokeOrderResponse response = client.execute(request);
+        RevokeOrderResponse response = client.revokeOrder(request);
 
         Assertions.assertNotNull(response, "API request should be successful");
         Assertions.assertEquals("E045025", response.getCode(), "Error code should be correct");
@@ -194,7 +170,7 @@ public class DefaultOpenApiClientTest {
         request.setRefundOrderNo("REF-" + request.getOrderNo());
         request.setRefundAmount(0.01);
 
-        RefundOrderResponse response = client.execute(request);
+        RefundOrderResponse response = client.refundOrder(request);
 
         Assertions.assertNotNull(response, "API request should be successful");
         Assertions.assertEquals("E045043", response.getCode(), "Error code should be correct");
@@ -208,7 +184,7 @@ public class DefaultOpenApiClientTest {
         request.setCurrency(Currency.CAD);
         request.setPaymentMethod(PaymentMethod.WECHATPAY);
 
-        QueryExchangeRateResponse response = client.execute(request);
+        QueryExchangeRateResponse response = client.queryExchangeRate(request);
 
         Assertions.assertNotNull(response, "API request should be successful");
         Assertions.assertEquals("0", response.getCode(), "Code should be 0");

@@ -1,9 +1,9 @@
 package ca.snappay.openapi.request.order;
 
-import ca.snappay.openapi.request.ExtensionParameters;
 import ca.snappay.openapi.response.order.QueryOrderResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
 
@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class QueryOrderRequest extends AbstractOrderRequest<QueryOrderResponse> {
 
