@@ -2,6 +2,7 @@ package ca.snappay.openapi.request;
 
 import java.lang.reflect.Type;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -30,22 +31,17 @@ public class ExtensionParameters {
         @Override
         public JsonElement serialize(ExtensionParameters src, Type typeOfSrc,
                 JsonSerializationContext context) {
-            StringBuilder sb = new StringBuilder("{");
+            JsonObject jsonObject = new JsonObject();
             if (src.storeNo != null) {
-                sb.append("\\\"store_no\\\":\\\"").append(src.storeNo).append("\\\",");
+                jsonObject.addProperty("store_no", src.storeNo);
             }
             if (src.subAppId != null) {
-                sb.append("\\\"sub_app_id\\\":\\\"").append(src.subAppId).append("\\\",");
+                jsonObject.addProperty("sub_app_id", src.subAppId);
             }
             if (src.qrCodeWidth != null) {
-                sb.append("\\\"qrcode_pic_size\\\":\\\"").append(src.qrCodeWidth).append(", ").append(src.qrCodeHeight)
-                    .append("\\\",");
+                jsonObject.addProperty("qrcode_pic_size", src.qrCodeWidth + "," + src.qrCodeHeight);
             }
-            if (sb.length() > 1) {
-                sb.deleteCharAt(sb.length() - 1);
-            }
-            sb.append("}");
-            return new JsonPrimitive(sb.toString());
+            return new JsonPrimitive(jsonObject.toString());
         }
 
     }
