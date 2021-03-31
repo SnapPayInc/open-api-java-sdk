@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * The response data for website payment.
+ * The response data for mini payment.
  *
  * @author shawndu
  * @version 1.0
@@ -14,9 +14,12 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class WebsitePayResponseData extends AbstractPayResponseData {
+public class MiniPayResponseData extends AbstractPayResponseData {
 
-    @SerializedName("webpay_url")
-    private String webpayUrl;
+    @SerializedName("request_payment")
+    private String requestPayment;
+
+    @SerializedName("trade_no")
+    private String tradeNo;
 
 }

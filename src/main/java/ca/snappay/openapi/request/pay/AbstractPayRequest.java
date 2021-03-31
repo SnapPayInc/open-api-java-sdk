@@ -5,9 +5,11 @@ import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.request.ExtensionParameters;
 import ca.snappay.openapi.request.OpenApiRequest;
 import ca.snappay.openapi.response.OpenApiResponse;
+import java.util.EnumSet;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -18,8 +20,9 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
-public abstract class AbstractPayRequest<T extends OpenApiResponse> extends OpenApiRequest<T> {
+public abstract class AbstractPayRequest<T extends OpenApiResponse<?>> extends OpenApiRequest<T> {
 
     @SerializedName("payment_method")
     private PaymentMethod paymentMethod;
@@ -52,7 +55,10 @@ public abstract class AbstractPayRequest<T extends OpenApiResponse> extends Open
 
     @Override
     public void validate() {
-        validateRequired("paymentMethod", paymentMethod);
+        if (isPaymentMethodRequired()) {
+            validateRequired("paymentMethod", paymentMethod);
+            validatePaymentMethod();
+        }
         validateRequired("orderNo", orderNo);
         validateLength("orderNo", orderNo, 64);
         validateRequired("amount", amount);
@@ -66,8 +72,35 @@ public abstract class AbstractPayRequest<T extends OpenApiResponse> extends Open
             validateRange("effectiveMinutes", effectiveMinutes.intValue(), 5, 60);
         }
         if (extensionParameters != null) {
-            validateLength("extensionParameters.storeNo", extensionParameters.getStoreNo(), 8);
+            if (extensionParameters.getStoreNo() != null) {
+                validateLength("extensionParameters.storeNo", extensionParameters.getStoreNo(), 8);
+            }
+            if (extensionParameters.getQrCodeHeight() != null) {
+                validateRange("extensionParameters.qrCodeHeight", extensionParameters.getQrCodeHeight(), 200, 400);
+                validateRequired("extensionParameters.qrCodeWidth", extensionParameters.getQrCodeWidth());
+            }
+            if (extensionParameters.getQrCodeWidth() != null) {
+                validateRange("extensionParameters.qrCodeWidth", extensionParameters.getQrCodeWidth(), 200, 400);
+                validateRequired("extensionParameters.qrCodeHeight", extensionParameters.getQrCodeHeight());
+            }
         }
+    }
+
+    private void validatePaymentMethod() {
+        if (paymentMethod != null && !applicablePaymentMethods().contains(paymentMethod)) {
+            throw new IllegalArgumentException("Given payment_method is not applicable");
+        }
+    }
+
+    /**
+     * Returns the set of applicable payment methods. If the client gives a payment method that is not applicable
+     * for the type of payment, an error will return.
+     * 
+     */
+    abstract protected EnumSet<PaymentMethod> applicablePaymentMethods();
+
+    protected boolean isPaymentMethodRequired() {
+        return true;
     }
 
 }

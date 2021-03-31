@@ -90,6 +90,20 @@ public interface ConfigurationHolder {
     public String getPrivateKey();
 
     /**
+     * Gets the connection timeout setting.
+     *
+     * @return connection timeout in seconds.
+     */
+    public int getConnectionTimeout();
+
+    /**
+     * Gets the read timeout setting.
+     *
+     * @return read timeout in seconds.
+     */
+    public int getReadTimeout();
+
+    /**
      * Validates the configuration.
      *
      * @throws OpenApiConfigurationExcepiton if any configuration is missing.
@@ -122,6 +136,12 @@ public interface ConfigurationHolder {
         if (SignType.RSA == getSignType() && StringUtils.isEmpty(getPublicKey())) {
             throw new OpenApiConfigurationExcepiton("Public key is not configured");
         }
+        if (getConnectionTimeout() <= 0 || getConnectionTimeout() > 60) {
+            throw new OpenApiConfigurationExcepiton("Connection timeout needs to be between 1 and 60");
+        }
+        if (getReadTimeout() <= 0 || getReadTimeout() > 60) {
+          throw new OpenApiConfigurationExcepiton("Read timeout needs to be between 1 and 60");
+      }
     }
 
 }

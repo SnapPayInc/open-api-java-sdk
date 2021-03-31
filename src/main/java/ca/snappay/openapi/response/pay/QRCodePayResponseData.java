@@ -1,8 +1,8 @@
 package ca.snappay.openapi.response.pay;
 
-import ca.snappay.openapi.response.OpenApiResponseData;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -12,6 +12,7 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class QRCodePayResponseData extends AbstractPayResponseData {
 

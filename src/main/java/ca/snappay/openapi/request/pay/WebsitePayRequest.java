@@ -3,8 +3,10 @@ package ca.snappay.openapi.request.pay;
 import ca.snappay.openapi.constant.BrowserType;
 import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.response.pay.WebsitePayResponse;
+import java.util.EnumSet;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -14,6 +16,7 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class WebsitePayRequest extends AbstractPayRequest<WebsitePayResponse> {
 
@@ -30,17 +33,27 @@ public class WebsitePayRequest extends AbstractPayRequest<WebsitePayResponse> {
         return REQUEST_METHOD;
     }
 
+    public WebsitePayRequest(PaymentMethod paymentMethod, String orderNo, Double amount, String description) {
+      setPaymentMethod(paymentMethod);
+      setOrderNo(orderNo);
+      setAmount(amount);
+      setDescription(description);
+  }
+
     @Override
     public void validate() {
         super.validate();
 
-        if (getPaymentMethod() == PaymentMethod.WECHATPAY) {
-            throw new IllegalArgumentException("WeChatPay does not support website payment");
-        }
-        if (getPaymentMethod() == PaymentMethod.UNIONPAY && browserType == BrowserType.WAP) {
-            throw new IllegalArgumentException("UnionPay does not support WAP browser");
+        if ((getPaymentMethod() == PaymentMethod.UNIONPAY || getPaymentMethod() == PaymentMethod.CREDITCARD_PAYBYTOKEN)
+                && browserType == BrowserType.WAP) {
+            throw new IllegalArgumentException("WAP browser is not supported");
         }
         validateLength("returnUrl", returnUrl, 256);
+    }
+
+    @Override
+    protected EnumSet<PaymentMethod> applicablePaymentMethods() {
+        return EnumSet.of(PaymentMethod.ALIPAY, PaymentMethod.UNIONPAY, PaymentMethod.CREDITCARD_PAYBYTOKEN);
     }
 
 }

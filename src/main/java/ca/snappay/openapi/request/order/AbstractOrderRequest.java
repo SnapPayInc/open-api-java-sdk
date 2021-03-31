@@ -5,6 +5,7 @@ import ca.snappay.openapi.request.OpenApiRequest;
 import ca.snappay.openapi.response.OpenApiResponse;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -15,8 +16,9 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
-public abstract class AbstractOrderRequest<T extends OpenApiResponse> extends OpenApiRequest<T> {
+public abstract class AbstractOrderRequest<T extends OpenApiResponse<?>> extends OpenApiRequest<T> {
 
     @SerializedName("out_order_no")
     private String orderNo;

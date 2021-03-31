@@ -11,7 +11,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
-public class AbstractOrderResponseData implements OpenApiResponseData {
+public abstract class AbstractOrderResponseData implements OpenApiResponseData {
 
     @SerializedName("trans_no")
     private String transactionNo;

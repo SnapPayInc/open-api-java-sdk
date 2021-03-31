@@ -1,8 +1,10 @@
 package ca.snappay.openapi.request.pay;
 
+import java.util.EnumSet;
 import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.response.pay.QRCodePayResponse;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -12,6 +14,7 @@ import lombok.ToString;
  * @version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class QRCodePayRequest extends AbstractPayRequest<QRCodePayResponse> {
 
@@ -22,12 +25,15 @@ public class QRCodePayRequest extends AbstractPayRequest<QRCodePayResponse> {
         return REQUEST_METHOD;
     }
 
-    @Override
-    public void validate() {
-        super.validate();
+    public QRCodePayRequest(PaymentMethod paymentMethod, String orderNo, Double amount, String description) {
+        setPaymentMethod(paymentMethod);
+        setOrderNo(orderNo);
+        setAmount(amount);
+        setDescription(description);
+    }
 
-        if (getPaymentMethod() == PaymentMethod.UNIONPAY) {
-            throw new IllegalArgumentException("UnionPay does not support QR code payment");
-        }
+    @Override
+    protected EnumSet<PaymentMethod> applicablePaymentMethods() {
+        return EnumSet.of(PaymentMethod.ALIPAY, PaymentMethod.WECHATPAY, PaymentMethod.UNIONPAY_QR);
     }
 }

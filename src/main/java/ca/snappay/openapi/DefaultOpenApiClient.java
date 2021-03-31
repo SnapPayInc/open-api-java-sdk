@@ -4,18 +4,36 @@ import ca.snappay.openapi.config.ConfigurationHolder;
 import ca.snappay.openapi.config.OpenApiConfigurationExcepiton;
 import ca.snappay.openapi.config.provider.DefaultConfigurationProvider;
 import ca.snappay.openapi.request.OpenApiRequest;
-import ca.snappay.openapi.response.pay.BarCodePayResponseData;
+import ca.snappay.openapi.request.misc.QueryExchangeRateRequest;
+import ca.snappay.openapi.request.order.QueryOrderRequest;
+import ca.snappay.openapi.request.order.RefundOrderRequest;
+import ca.snappay.openapi.request.order.RevokeOrderRequest;
+import ca.snappay.openapi.request.pay.BarCodePayRequest;
+import ca.snappay.openapi.request.pay.H5PayRequest;
+import ca.snappay.openapi.request.pay.MiniPayRequest;
+import ca.snappay.openapi.request.pay.NativePayRequest;
+import ca.snappay.openapi.request.pay.QRCodePayRequest;
+import ca.snappay.openapi.request.pay.WebsitePayRequest;
+import ca.snappay.openapi.response.pay.BarCodePayResponse;
+import ca.snappay.openapi.response.pay.H5PayResponse;
+import ca.snappay.openapi.response.pay.MiniPayResponse;
+import ca.snappay.openapi.response.pay.NativePayResponse;
+import ca.snappay.openapi.response.pay.QRCodePayResponse;
+import ca.snappay.openapi.response.pay.WebsitePayResponse;
 import ca.snappay.openapi.sign.SignHandler;
 import ca.snappay.openapi.constant.Constants;
 import ca.snappay.openapi.response.OpenApiResponse;
-import com.google.gson.JsonArray;
+import ca.snappay.openapi.response.misc.QueryExchangeRateResponse;
+import ca.snappay.openapi.response.order.QueryOrderResponse;
+import ca.snappay.openapi.response.order.RefundOrderResponse;
+import ca.snappay.openapi.response.order.RevokeOrderResponse;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
@@ -28,7 +46,6 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 /**
  * The default implementation of <code>OpenApiClient</code> using Apache HttpClient.
@@ -58,7 +75,9 @@ public class DefaultOpenApiClient implements OpenApiClient {
         this.config = config;
         this.config.validate();
 
-        httpClient = HttpClients.createDefault();
+        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(config.getConnectionTimeout() * 1000)
+                .setSocketTimeout(config.getReadTimeout() * 1000).build();
+        httpClient = HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
         try {
             requestUri = new URIBuilder().setScheme("https").setHost(config.getGatewayHost()).setPath(GATEWAY_PATH).build();
         } catch (URISyntaxException e) {
@@ -75,7 +94,57 @@ public class DefaultOpenApiClient implements OpenApiClient {
         this(DefaultConfigurationProvider.create().resolveConfiguration());
     }
 
-    public <T extends OpenApiResponse> T execute(OpenApiRequest<T> request) throws OpenApiException {
+    @Override
+    public BarCodePayResponse barCodePay(BarCodePayRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public QRCodePayResponse qrCodePay(QRCodePayRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public H5PayResponse h5Pay(H5PayRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public NativePayResponse nativePay(NativePayRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public WebsitePayResponse websitePay(WebsitePayRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public MiniPayResponse miniPay(MiniPayRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public QueryOrderResponse queryOrder(QueryOrderRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public RevokeOrderResponse revokeOrder(RevokeOrderRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public RefundOrderResponse refundOrder(RefundOrderRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public QueryExchangeRateResponse queryExchangeRate(QueryExchangeRateRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    private <T extends OpenApiResponse<?>> T execute(OpenApiRequest<T> request) throws OpenApiException {
         request.validate();
 
         // convert the request object to JsonObject
