@@ -34,4 +34,8 @@ public class RevokeOrderRequest extends AbstractOrderRequest<RevokeOrderResponse
         return REQUEST_METHOD;
     }
 
+    public RevokeOrderRequest(String orderNo) {
+        setOrderNo(orderNo);
+    }
+
 }

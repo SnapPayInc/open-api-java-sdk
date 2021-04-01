@@ -48,6 +48,12 @@ public class RefundOrderRequest extends AbstractOrderRequest<RefundOrderResponse
         return REQUEST_METHOD;
     }
 
+    public RefundOrderRequest(String orderNo, String refundOrderNo, Double refundAmount) {
+        setOrderNo(orderNo);
+        this.refundOrderNo = refundOrderNo;
+        this.refundAmount = refundAmount;
+    }
+
     @Override
     public void validate() {
         super.validate();

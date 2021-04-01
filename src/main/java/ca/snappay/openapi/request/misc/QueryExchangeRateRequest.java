@@ -47,6 +47,11 @@ public class QueryExchangeRateRequest extends OpenApiRequest<QueryExchangeRateRe
     @SerializedName("pay_type")
     private PaymentType paymentType;
 
+    public QueryExchangeRateRequest(Currency currency, PaymentMethod paymentMethod) {
+        this.currency = currency;
+        this.paymentMethod = paymentMethod;
+    }
+
     @Override
     public String getRequestMethod() {
         return REQUEST_METHOD;
