@@ -1,0 +1,4 @@
+[submodule "jenkins-pipeline"]
+	path = jenkins-pipeline
+	url = git@github.com:SnapPayInc/jenkins-pipeline.git
+	branch = master
