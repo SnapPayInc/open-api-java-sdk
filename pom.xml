@@ -76,21 +76,21 @@
     </dependencies>
 
     <distributionManagement>
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>ossrh</id>
-            <name>sonatype-staging</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-            <layout>default</layout>
-        </repository>
-        <snapshotRepository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>ossrh</id>
-            <name>sonatype-snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <layout>default</layout>
-        </snapshotRepository>
-    </distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>snappay-artifactory-release</id>
+			<name>libs-release</name>
+			<url>https://artifactory.mgmt.snappay.ca/artifactory/libs-release</url>
+			<layout>default</layout>
+		</repository>
+		<snapshotRepository>
+			<uniqueVersion>true</uniqueVersion>
+			<id>snappay-artifactory-snapshot</id>
+			<name>libs-snapshot</name>
+			<url>https://artifactory.mgmt.snappay.ca/artifactory/libs-snapshot</url>
+			<layout>default</layout>
+		</snapshotRepository>
+	</distributionManagement>
 
     <build>
         <plugins>
