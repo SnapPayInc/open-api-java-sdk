@@ -29,8 +29,8 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com:SnapPayInc/open-api-java-sdk.git</connection>
-        <developerConnection>scm:git:git://github.com:SnapPayInc/open-api-java-sdk.git</developerConnection>
+        <connection>scm:git:git@github.com:SnapPayInc/open-api-java-sdk.git</connection>
+        <developerConnection>scm:git:git@github.com:SnapPayInc/open-api-java-sdk.git</developerConnection>
         <url>https://github.com/SnapPayInc/open-api-java-sdk</url>
       <tag>HEAD</tag>
   </scm>
