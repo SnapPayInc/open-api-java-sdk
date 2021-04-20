@@ -15,7 +15,7 @@
  */
 package ca.snappay.openapi.request.card;
 
-import ca.snappay.openapi.response.card.QueryCardResponse;
+import ca.snappay.openapi.response.card.RefundCardResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -29,7 +29,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class RefundCardRequest extends AbstractCardRequest<QueryCardResponse> {
+public class RefundCardRequest extends AbstractCardRequest<RefundCardResponse> {
 
     private static final String REQUEST_METHOD = "card.refund";
 
