@@ -105,6 +105,14 @@ public interface ConfigurationHolder {
     public String getPrivateKey();
 
     /**
+     * Gets whether the client supports order split.
+     * This feature is only available for Snaplii payment.
+     *
+     * @return true if the client supports order split, or false otherwise.
+     */
+    public boolean isOrderSplitSupported();
+
+    /**
      * Gets the connection timeout setting.
      *
      * @return connection timeout in seconds.

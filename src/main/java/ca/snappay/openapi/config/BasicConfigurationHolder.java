@@ -36,6 +36,7 @@ public final class BasicConfigurationHolder implements ConfigurationHolder {
     private String publicKey;
     private String privateKey;
 
+    private boolean orderSplitSupported = true;
     private int connectionTimeout = 30;
     private int readTimeout = 30;
 
