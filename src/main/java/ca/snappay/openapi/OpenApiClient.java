@@ -15,6 +15,7 @@
  */
 package ca.snappay.openapi;
 
+import ca.snappay.openapi.request.OpenApiRequest;
 import ca.snappay.openapi.request.misc.QueryExchangeRateRequest;
 import ca.snappay.openapi.request.order.QueryOrderRequest;
 import ca.snappay.openapi.request.order.RefundOrderRequest;
@@ -25,6 +26,7 @@ import ca.snappay.openapi.request.pay.MiniPayRequest;
 import ca.snappay.openapi.request.pay.NativePayRequest;
 import ca.snappay.openapi.request.pay.QRCodePayRequest;
 import ca.snappay.openapi.request.pay.WebsitePayRequest;
+import ca.snappay.openapi.response.OpenApiResponse;
 import ca.snappay.openapi.response.misc.QueryExchangeRateResponse;
 import ca.snappay.openapi.response.order.QueryOrderResponse;
 import ca.snappay.openapi.response.order.RefundOrderResponse;
@@ -154,4 +156,13 @@ public interface OpenApiClient {
      */
     QueryExchangeRateResponse queryExchangeRate(QueryExchangeRateRequest request) throws OpenApiException;
 
+    /**
+     * Executes an API request. This is a low-level method which could handle all API methods.
+     *
+     * @param <T> the type of response.
+     * @param request the API request.
+     * @return the API response.
+     * @throws OpenApiException if any error occurred.
+     */
+    <T extends OpenApiResponse<?>> T execute(OpenApiRequest<T> request) throws OpenApiException;
 }

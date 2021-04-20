@@ -159,7 +159,8 @@ public class DefaultOpenApiClient implements OpenApiClient {
         return execute(request);
     }
 
-    private <T extends OpenApiResponse<?>> T execute(OpenApiRequest<T> request) throws OpenApiException {
+    @Override
+    public <T extends OpenApiResponse<?>> T execute(OpenApiRequest<T> request) throws OpenApiException {
         request.validate();
 
         // convert the request object to JsonObject
