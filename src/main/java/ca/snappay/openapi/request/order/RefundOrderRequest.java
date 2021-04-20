@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * The response for order refund.
+ * The request for order refund.
  *
  * @author shawndu
  * @version 1.0

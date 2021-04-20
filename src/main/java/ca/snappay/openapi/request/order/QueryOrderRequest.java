@@ -8,7 +8,7 @@ import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * The response for order query.
+ * The request for order query.
  *
  * @author shawndu
  * @version 1.0
