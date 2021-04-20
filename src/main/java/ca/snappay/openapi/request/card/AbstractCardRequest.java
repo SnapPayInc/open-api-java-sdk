@@ -30,17 +30,17 @@ import lombok.ToString;
 public abstract class AbstractCardRequest <T extends OpenApiResponse<?>> extends OpenApiRequest<T> {
 
     @SerializedName("gift_card_no")
-    private String giftCardNo;
+    private String cardNo;
 
     @SerializedName("extension_parameters")
     private ExtensionParameters extensionParameters;
 
     @Override
     public void validate() {
-        if (StringUtils.isEmpty(giftCardNo)) {
-            throw new IllegalArgumentException("giftCardNo needs to be provided");
+        if (StringUtils.isEmpty(cardNo)) {
+            throw new IllegalArgumentException("cardNo needs to be provided");
         }
-        validateLength("giftCardNo", giftCardNo, 32);
+        validateLength("cardNo", cardNo, 32);
     }
 
 }

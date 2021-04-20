@@ -18,18 +18,25 @@ package ca.snappay.openapi;
 import ca.snappay.openapi.config.BasicConfigurationHolder;
 import ca.snappay.openapi.constant.*;
 import ca.snappay.openapi.request.ExtensionParameters;
+import ca.snappay.openapi.request.card.ActivateCardRequest;
+import ca.snappay.openapi.request.card.QueryCardRequest;
+import ca.snappay.openapi.request.card.RefundCardRequest;
 import ca.snappay.openapi.request.misc.QueryExchangeRateRequest;
 import ca.snappay.openapi.request.order.QueryOrderRequest;
 import ca.snappay.openapi.request.order.RefundOrderRequest;
 import ca.snappay.openapi.request.order.RevokeOrderRequest;
 import ca.snappay.openapi.request.pay.*;
+import ca.snappay.openapi.response.card.ActivateCardResponse;
+import ca.snappay.openapi.response.card.QueryCardResponse;
+import ca.snappay.openapi.response.card.RefundCardResponse;
 import ca.snappay.openapi.response.misc.QueryExchangeRateResponse;
 import ca.snappay.openapi.response.order.QueryOrderResponse;
 import ca.snappay.openapi.response.order.RefundOrderResponse;
 import ca.snappay.openapi.response.order.RevokeOrderResponse;
 import ca.snappay.openapi.response.pay.*;
 import com.google.gson.JsonObject;
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -59,10 +66,10 @@ public class DefaultOpenApiClientTest {
 
         BarCodePayResponse response = client.barCodePay(request);
 
-        Assertions.assertNotNull(response, "API request should be successful");
-        Assertions.assertEquals("E062004", response.getCode(), "Error code should be correct");
-        Assertions.assertEquals(0, response.getTotal().intValue());
-        Assertions.assertNotNull(response.getPsn(), "PSN should be given");
+        assertNotNull(response, "API request should be successful");
+        assertEquals("E062004", response.getCode(), "Error code should be correct");
+        assertEquals(0, response.getTotal().intValue());
+        assertNotNull(response.getPsn(), "PSN should be given");
     }
 
     @Test
@@ -72,12 +79,12 @@ public class DefaultOpenApiClientTest {
 
         QRCodePayResponse response = client.qrCodePay(request);
 
-        Assertions.assertNotNull(response, "API request should be successful");
-        Assertions.assertEquals("0", response.getCode(), "Code should be 0");
-        Assertions.assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
-        Assertions.assertNotNull(response.getResult(), "Result should not be null");
-        Assertions.assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
-        Assertions.assertEquals(TransactionStatus.USERPAYING, response.getResult().getTransactionStatus(), "Transaction status should be correct");
+        assertNotNull(response, "API request should be successful");
+        assertEquals("0", response.getCode(), "Code should be 0");
+        assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
+        assertNotNull(response.getResult(), "Result should not be null");
+        assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
+        assertEquals(TransactionStatus.USERPAYING, response.getResult().getTransactionStatus(), "Transaction status should be correct");
     }
 
     @Test
@@ -92,12 +99,12 @@ public class DefaultOpenApiClientTest {
 
         QRCodePayResponse response = client.qrCodePay(request);
 
-        Assertions.assertNotNull(response, "API request should be successful");
-        Assertions.assertEquals("0", response.getCode(), "Code should be 0");
-        Assertions.assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
-        Assertions.assertNotNull(response.getResult(), "Result should not be null");
-        Assertions.assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
-        Assertions.assertEquals(TransactionStatus.USERPAYING, response.getResult().getTransactionStatus(), "Transaction status should be correct");
+        assertNotNull(response, "API request should be successful");
+        assertEquals("0", response.getCode(), "Code should be 0");
+        assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
+        assertNotNull(response.getResult(), "Result should not be null");
+        assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
+        assertEquals(TransactionStatus.USERPAYING, response.getResult().getTransactionStatus(), "Transaction status should be correct");
     }
 
     @Test
@@ -107,12 +114,12 @@ public class DefaultOpenApiClientTest {
 
         H5PayResponse response = client.h5Pay(request);
 
-        Assertions.assertNotNull(response, "API request should be successful");
-        Assertions.assertEquals("0", response.getCode(), "Code should be 0");
-        Assertions.assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
-        Assertions.assertNotNull(response.getResult(), "Result should not be null");
-        Assertions.assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
-        Assertions.assertNotNull(response.getResult().getH5PaymentUrl(), "Payment URL should not be null");
+        assertNotNull(response, "API request should be successful");
+        assertEquals("0", response.getCode(), "Code should be 0");
+        assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
+        assertNotNull(response.getResult(), "Result should not be null");
+        assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
+        assertNotNull(response.getResult().getH5PaymentUrl(), "Payment URL should not be null");
     }
 
     @Test
@@ -123,10 +130,10 @@ public class DefaultOpenApiClientTest {
 
         NativePayResponse response = client.nativePay(request);
 
-        Assertions.assertNotNull(response, "API request should be successful");
-        Assertions.assertEquals("E045048", response.getCode(), "Error code should be correct");
-        Assertions.assertEquals(0, response.getTotal().intValue());
-        Assertions.assertNotNull(response.getPsn(), "PSN should be given");
+        assertNotNull(response, "API request should be successful");
+        assertEquals("E045048", response.getCode(), "Error code should be correct");
+        assertEquals(0, response.getTotal().intValue());
+        assertNotNull(response.getPsn(), "PSN should be given");
     }
 
     @Test
@@ -137,12 +144,12 @@ public class DefaultOpenApiClientTest {
 
         WebsitePayResponse response = client.websitePay(request);
 
-        Assertions.assertNotNull(response, "API request should be successful");
-        Assertions.assertEquals("0", response.getCode(), "Code should be 0");
-        Assertions.assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
-        Assertions.assertNotNull(response.getResult(), "Result should not be null");
-        Assertions.assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
-        Assertions.assertNotNull(response.getResult().getWebpayUrl(), "Payment URL should not be null");
+        assertNotNull(response, "API request should be successful");
+        assertEquals("0", response.getCode(), "Code should be 0");
+        assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
+        assertNotNull(response.getResult(), "Result should not be null");
+        assertEquals(config.getMerchantNo(), response.getResult().getMerchantNo(), "Merchant number should match");
+        assertNotNull(response.getResult().getWebpayUrl(), "Payment URL should not be null");
     }
 
     @Test
@@ -157,12 +164,12 @@ public class DefaultOpenApiClientTest {
 
         QueryOrderResponse queryResponse = client.queryOrder(queryRequest);
 
-        Assertions.assertNotNull(queryResponse, "API request should be successful");
-        Assertions.assertEquals("0", queryResponse.getCode(), "Code should be 0");
-        Assertions.assertEquals(1, queryResponse.getTotal().intValue(), "1 result should be returned");
-        Assertions.assertNotNull(queryResponse.getResult(), "Result should not be null");
-        Assertions.assertEquals(config.getMerchantNo(), queryResponse.getResult().getMerchantNo(), "Merchant number should match");
-        Assertions.assertEquals(TransactionStatus.USERPAYING, queryResponse.getResult().getTransactionStatus(), "Transaction status should be correct");
+        assertNotNull(queryResponse, "API request should be successful");
+        assertEquals("0", queryResponse.getCode(), "Code should be 0");
+        assertEquals(1, queryResponse.getTotal().intValue(), "1 result should be returned");
+        assertNotNull(queryResponse.getResult(), "Result should not be null");
+        assertEquals(config.getMerchantNo(), queryResponse.getResult().getMerchantNo(), "Merchant number should match");
+        assertEquals(TransactionStatus.USERPAYING, queryResponse.getResult().getTransactionStatus(), "Transaction status should be correct");
     }
 
     @Test
@@ -171,10 +178,10 @@ public class DefaultOpenApiClientTest {
 
         RevokeOrderResponse response = client.revokeOrder(request);
 
-        Assertions.assertNotNull(response, "API request should be successful");
-        Assertions.assertEquals("E045025", response.getCode(), "Error code should be correct");
-        Assertions.assertEquals(0, response.getTotal().intValue());
-        Assertions.assertNotNull(response.getPsn(), "PSN should be given");
+        assertNotNull(response, "API request should be successful");
+        assertEquals("E045025", response.getCode(), "Error code should be correct");
+        assertEquals(0, response.getTotal().intValue());
+        assertNotNull(response.getPsn(), "PSN should be given");
     }
 
     @Test
@@ -184,10 +191,10 @@ public class DefaultOpenApiClientTest {
 
         RefundOrderResponse response = client.refundOrder(request);
 
-        Assertions.assertNotNull(response, "API request should be successful");
-        Assertions.assertEquals("E045043", response.getCode(), "Error code should be correct");
-        Assertions.assertEquals(0, response.getTotal().intValue());
-        Assertions.assertNotNull(response.getPsn(), "PSN should be given");
+        assertNotNull(response, "API request should be successful");
+        assertEquals("E045043", response.getCode(), "Error code should be correct");
+        assertEquals(0, response.getTotal().intValue());
+        assertNotNull(response.getPsn(), "PSN should be given");
     }
 
     @Test
@@ -196,11 +203,61 @@ public class DefaultOpenApiClientTest {
 
         QueryExchangeRateResponse response = client.queryExchangeRate(request);
 
-        Assertions.assertNotNull(response, "API request should be successful");
-        Assertions.assertEquals("0", response.getCode(), "Code should be 0");
-        Assertions.assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
-        Assertions.assertNotNull(response.getResult(), "Result should not be null");
-        Assertions.assertNotNull(response.getResult().getExchangeRate(), "Exchange rate should be returned");
+        assertNotNull(response, "API request should be successful");
+        assertEquals("0", response.getCode(), "Code should be 0");
+        assertEquals(1, response.getTotal().intValue(), "1 result should be returned");
+        assertNotNull(response.getResult(), "Result should not be null");
+        assertNotNull(response.getResult().getExchangeRate(), "Exchange rate should be returned");
+    }
+
+    private void replaceCardApiClient() {
+        config.setAppId("c9f9a75d50b35d33");
+        config.setMerchantNo("901951466157");
+        config.setGatewayHost("open.snappay.ca");
+        config.setLanguage(Language.ENGLISH);
+        config.setSignType(SignType.MD5);
+        config.setPrivateKey("70a43a6ead6cbb72ac171df672e9383d");
+        client = new DefaultOpenApiClient(config);
+    }
+
+    @Test
+    public void testActivateCard() throws OpenApiException {
+        replaceCardApiClient();
+
+        ActivateCardRequest request = new ActivateCardRequest("8010820000002271");
+
+        ActivateCardResponse response = client.activateCard(request);
+
+        assertNotNull(response, "API request should be successful");
+        assertEquals("ERR_CARD_001", response.getCode(), "Code should be ERR_CARD_001");
+    }
+
+    @Test
+    public void testQueryCard() throws OpenApiException {
+        replaceCardApiClient();
+
+        QueryCardRequest request = new QueryCardRequest("8010820000002263");
+
+        QueryCardResponse response = client.queryCard(request);
+
+        assertNotNull(response, "API request should be successful");
+        assertEquals("0", response.getCode(), "Code should be 0");
+        assertEquals(200, response.getData().get(0).getBalance());
+        assertEquals(200, response.getData().get(0).getFaceValue());
+        assertEquals(CardStatus.ACTIVATED, response.getData().get(0).getCardStatus());
+        assertEquals("0002601", response.getData().get(0).getCardType());
+    }
+
+    @Test
+    public void testRefundCard() throws OpenApiException {
+        replaceCardApiClient();
+
+        RefundCardRequest request = new RefundCardRequest("8010820000002271");
+
+        RefundCardResponse response = client.refundCard(request);
+
+        assertNotNull(response, "API request should be successful");
+        assertEquals("ERR_CARD_003", response.getCode(), "Code should be ERR_CARD_003");
     }
 
 }

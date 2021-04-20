@@ -13,33 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.snappay.openapi.request.card;
+package ca.snappay.openapi.constant;
 
-import ca.snappay.openapi.response.card.ActivateCardResponse;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * The request for card activation.
+ * This enum represents the different card statuses.
  *
  * @author shawndu
  * @version 1.0
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class ActivateCardRequest extends AbstractCardRequest<ActivateCardResponse> {
+public enum CardStatus {
 
-    private static final String REQUEST_METHOD = "card.activate";
+    /**
+     * Card is reported lost.
+     */
+    @SerializedName("3")
+    LOST,
 
-    @Override
-    public String getRequestMethod() {
-        return REQUEST_METHOD;
-    }
+    /**
+     * Card is not activated.
+     */
+    @SerializedName("4")
+    UNACTIVATED,
 
-    public ActivateCardRequest(String cardNo) {
-        setCardNo(cardNo);
-    }
+    /**
+     * Card is activated but not used.
+     */
+    @SerializedName("5")
+    ACTIVATED,
+
+    /**
+     * Card is used (activated in phone app).
+     */
+    @SerializedName("6")
+    USED,
+
+    /**
+     * Card is refunded.
+     */
+    @SerializedName("7")
+    REFUNDED;
 
 }

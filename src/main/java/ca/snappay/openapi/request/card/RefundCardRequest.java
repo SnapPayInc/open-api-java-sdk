@@ -38,4 +38,8 @@ public class RefundCardRequest extends AbstractCardRequest<RefundCardResponse> {
         return REQUEST_METHOD;
     }
 
+    public RefundCardRequest(String cardNo) {
+        setCardNo(cardNo);
+    }
+
 }

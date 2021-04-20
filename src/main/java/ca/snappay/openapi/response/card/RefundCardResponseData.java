@@ -15,11 +15,23 @@
  */
 package ca.snappay.openapi.response.card;
 
+import com.google.gson.annotations.SerializedName;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 /**
  * The response data for card refund.
  *
  * @author shawndu
  * @version 1.0
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class RefundCardResponseData extends AbstractCardResponseData {
+
+    @SerializedName("card_balance")
+    private Double balance;
+
 }

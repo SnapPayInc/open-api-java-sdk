@@ -38,4 +38,8 @@ public class QueryCardRequest extends AbstractCardRequest<QueryCardResponse> {
         return REQUEST_METHOD;
     }
 
+    public QueryCardRequest(String cardNo) {
+        setCardNo(cardNo);
+    }
+
 }
