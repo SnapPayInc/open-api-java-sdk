@@ -19,6 +19,9 @@ import ca.snappay.openapi.config.ConfigurationHolder;
 import ca.snappay.openapi.config.OpenApiConfigurationExcepiton;
 import ca.snappay.openapi.config.provider.DefaultConfigurationProvider;
 import ca.snappay.openapi.request.OpenApiRequest;
+import ca.snappay.openapi.request.card.ActivateCardRequest;
+import ca.snappay.openapi.request.card.QueryCardRequest;
+import ca.snappay.openapi.request.card.RefundCardRequest;
 import ca.snappay.openapi.request.misc.QueryExchangeRateRequest;
 import ca.snappay.openapi.request.order.QueryOrderRequest;
 import ca.snappay.openapi.request.order.RefundOrderRequest;
@@ -38,6 +41,9 @@ import ca.snappay.openapi.response.pay.WebsitePayResponse;
 import ca.snappay.openapi.sign.SignHandler;
 import ca.snappay.openapi.constant.Constants;
 import ca.snappay.openapi.response.OpenApiResponse;
+import ca.snappay.openapi.response.card.ActivateCardResponse;
+import ca.snappay.openapi.response.card.QueryCardResponse;
+import ca.snappay.openapi.response.card.RefundCardResponse;
 import ca.snappay.openapi.response.misc.QueryExchangeRateResponse;
 import ca.snappay.openapi.response.order.QueryOrderResponse;
 import ca.snappay.openapi.response.order.RefundOrderResponse;
@@ -156,6 +162,21 @@ public class DefaultOpenApiClient implements OpenApiClient {
 
     @Override
     public QueryExchangeRateResponse queryExchangeRate(QueryExchangeRateRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public ActivateCardResponse activateCard(ActivateCardRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public QueryCardResponse queryCard(QueryCardRequest request) throws OpenApiException {
+        return execute(request);
+    }
+
+    @Override
+    public RefundCardResponse refundCard(RefundCardRequest request) throws OpenApiException {
         return execute(request);
     }
 
