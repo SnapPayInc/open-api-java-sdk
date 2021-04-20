@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 SnapPay Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ca.snappay.openapi;
 
 import ca.snappay.openapi.config.BasicConfigurationHolder;
@@ -152,8 +167,7 @@ public class DefaultOpenApiClientTest {
 
     @Test
     public void testOrderRevoke() throws OpenApiException {
-        RevokeOrderRequest request = new RevokeOrderRequest();
-        request.setOrderNo("" + System.nanoTime());
+        RevokeOrderRequest request = new RevokeOrderRequest(String.valueOf(System.nanoTime()));
 
         RevokeOrderResponse response = client.revokeOrder(request);
 
@@ -165,10 +179,8 @@ public class DefaultOpenApiClientTest {
 
     @Test
     public void testOrderRefund() throws OpenApiException {
-        RefundOrderRequest request = new RefundOrderRequest();
-        request.setOrderNo("" + System.nanoTime());
-        request.setRefundOrderNo("REF-" + request.getOrderNo());
-        request.setRefundAmount(0.01);
+        String orderNo = String.valueOf(System.nanoTime());
+        RefundOrderRequest request = new RefundOrderRequest(orderNo, "REF-" + orderNo, 0.01);
 
         RefundOrderResponse response = client.refundOrder(request);
 
@@ -180,9 +192,7 @@ public class DefaultOpenApiClientTest {
 
     @Test
     public void testExchangeRateQuery() throws OpenApiException {
-        QueryExchangeRateRequest request = new QueryExchangeRateRequest();
-        request.setCurrency(Currency.CAD);
-        request.setPaymentMethod(PaymentMethod.WECHATPAY);
+        QueryExchangeRateRequest request = new QueryExchangeRateRequest(Currency.CAD, PaymentMethod.WECHATPAY);
 
         QueryExchangeRateResponse response = client.queryExchangeRate(request);
 

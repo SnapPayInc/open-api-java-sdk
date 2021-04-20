@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ca.snappay</groupId>
     <artifactId>openapi-java-sdk</artifactId>
-    <version>1.1.3-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>SnapPay OpenAPI Java SDK</name>
     <description>The Java SDK for SnapPay Payment Gateway OpenAPI</description>
-    <url>https://www.snappay.ca</url>
+    <url>https://developeer.snappay.ca</url>
 
     <licenses>
         <license>

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 SnapPay Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ca.snappay.openapi.constant;
 
 /**
@@ -6,34 +21,34 @@ package ca.snappay.openapi.constant;
  * @author shawndu
  * @version 1.0
  */
-public class Constants {
+public interface Constants {
 
-    public static final String APP_ID = "app_id";
+    String APP_ID = "app_id";
 
-    public static final String METHOD = "method";
+    String METHOD = "method";
 
-    public static final String MERCHANT_NO = "merchant_no";
+    String MERCHANT_NO = "merchant_no";
 
-    public static final String FORMAT = "format";
+    String FORMAT = "format";
 
-    public static final String CHARSET = "charset";
+    String CHARSET = "charset";
 
-    public static final String SIGN_TYPE = "sign_type";
+    String SIGN_TYPE = "sign_type";
 
-    public static final String SIGN = "sign";
+    String SIGN = "sign";
 
-    public static final String VERSION = "version";
+    String VERSION = "version";
 
-    public static final String FORMAT_JSON = "JSON";
+    String FORMAT_JSON = "JSON";
 
-    public static final String CHARSET_UTF8 = "UTF-8";
+    String CHARSET_UTF8 = "UTF-8";
 
-    public static final String VERSION_1 = "1.0";
+    String VERSION_1 = "1.0";
 
-    public static final String TOTAL = "total";
+    String TOTAL = "total";
 
-    public static final String DATA = "data";
+    String DATA = "data";
 
-    public static final String CODE_SUCCESS = "0";
+    String CODE_SUCCESS = "0";
 
 }
