@@ -77,6 +77,12 @@ public class BarCodePayResponseData extends AbstractPayResponseData {
     @SerializedName("trans_end_time")
     private LocalDateTime completionTime;
 
+    private Boolean partialPayment;
+
+    private Double totalAmount;
+
+    private Double outstandingAmount;
+
     public void setPaymentOperationMethodCode(int paymentOperationMethodCode) {
         this.paymentOperationMethodCode = paymentOperationMethodCode;
         this.paymentOperationMethod = PaymentOperationMethod.getFromCode(paymentOperationMethodCode);

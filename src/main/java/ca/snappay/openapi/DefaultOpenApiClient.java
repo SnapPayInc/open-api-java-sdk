@@ -39,7 +39,11 @@ import ca.snappay.openapi.response.pay.NativePayResponse;
 import ca.snappay.openapi.response.pay.QRCodePayResponse;
 import ca.snappay.openapi.response.pay.WebsitePayResponse;
 import ca.snappay.openapi.sign.SignHandler;
+import lombok.Getter;
+import lombok.Setter;
 import ca.snappay.openapi.constant.Constants;
+import ca.snappay.openapi.extension.AlternativeOrderNumberGenerator;
+import ca.snappay.openapi.extension.DefaultAlternativeOrderNumberGenerator;
 import ca.snappay.openapi.response.OpenApiResponse;
 import ca.snappay.openapi.response.card.ActivateCardResponse;
 import ca.snappay.openapi.response.card.QueryCardResponse;
@@ -67,6 +71,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The default implementation of <code>OpenApiClient</code> using Apache HttpClient.
@@ -81,10 +87,17 @@ public class DefaultOpenApiClient implements OpenApiClient {
 
     private static final String GATEWAY_PATH = "/api/gateway";
 
+    private static final String INSUFFICIENT_BALANCE_ERROR_CODE = "E066006";
+    private static final Pattern CARD_BALANCE_PATTERN = Pattern.compile("current balance is \\((\\d+\\.?\\d*)\\)");
+    
     private final ConfigurationHolder config;
     private final URI requestUri;
 
     private final CloseableHttpClient httpClient;
+
+    @Getter
+    @Setter
+    private AlternativeOrderNumberGenerator alternativeOrderNumberGenerator = new DefaultAlternativeOrderNumberGenerator();
 
     /**
      * Creates an instance of this client using the given configuration.
@@ -117,7 +130,31 @@ public class DefaultOpenApiClient implements OpenApiClient {
 
     @Override
     public BarCodePayResponse barCodePay(BarCodePayRequest request) throws OpenApiException {
-        return execute(request);
+        BarCodePayResponse response = execute(request);
+
+        // if order split is supported and the API returns insufficient balance
+        // submit another request which will use off the remaining balance and return a partial order
+        if (config.isPartialPaymentSupported() && request.isSnapliiPayment()) {
+            if (INSUFFICIENT_BALANCE_ERROR_CODE.equals(response.getCode())) {
+                Matcher balanceMatcher = CARD_BALANCE_PATTERN.matcher(response.getMessage());
+                if (balanceMatcher.matches()) {
+                    double balance = Double.parseDouble(balanceMatcher.group(1));
+                    double initialAmount = request.getAmount();
+                    // new payment amount should be the same as current balance
+                    request.setAmount(balance);
+                    // new order number is required since the acquiring system does not allow duplicate order numbers
+                    request.setOrderNo(alternativeOrderNumberGenerator.generate(config, request.getOrderNo()));
+                    response = execute(request);
+                    // if payment is successful, set additional fields for order split
+                    if (response.isSuccessful()) {
+                        response.getData().get(0).setPartialPayment(true);
+                        response.getData().get(0).setTotalAmount(initialAmount);
+                        response.getData().get(0).setOutstandingAmount(initialAmount - balance);
+                    }
+                }
+            }
+        }
+        return response;
     }
 
     @Override
@@ -262,7 +299,6 @@ public class DefaultOpenApiClient implements OpenApiClient {
         requestParams.addProperty(Constants.CHARSET, config.getCharset());
         requestParams.addProperty(Constants.VERSION, config.getVersion());
         requestParams.addProperty(Constants.SIGN_TYPE, config.getSignType().name());
-
     }
 
 }

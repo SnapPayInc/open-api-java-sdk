@@ -297,3 +297,44 @@ public class SnapPayNotificationServlet extends HttpServlet {
     }
 }
 ```
+
+**Automatic partial payment (applicable for Snaplii only)**
+If the user is making payment using Snaplii app, it is possible that the card balance is not sufficient for the whole order. In such case, this SDK is capable to make partial payment to use the full remaining balance in Snaplii and return the result to client. For example, if the user is trying to make a payment of $100 but the remaining balance in Snaplii is only $40, the payment will be successful and the actual paid amount will be $40, from Snaplii. And the payment response will indicate that this is partial payment with outstanding amount of $60.
+
+Internally, the SDK makes one additional payment request in case the balance is not sufficient. So the initial request will get to know the balance in Snaplii, then the SDK automatically adjusts the request and send it again. Since the acquiring system does not allow duplicate order number, the second request cannot use the same order number as the first request. The SDK includes an extension point where the client can specify how the second order number can be generated. One default implementation is provided which simply add prefix and/or suffix to the original order number. Clients can provide more sophisticated implementations based on the order management system they use.
+
+In order to enable this feature, the client needs to set BasicConfigurationHolder.partialPaymentSupported to true (by default, this is disabled), and can optionally provide an implementation of AlternativeOrderNumberGenerator. The provided DefaultAlternativeOrderNumberGenerator simply use the configured prefix and suffix to make the new order number. Code example as follows.
+
+*Use DefaultAlternativeOrderNumberGenerator*
+
+```java
+BasicConfigurationHolder config = new BasicConfigurationHolder();
+config.setPartialPaymentSupported(true);
+config.setAlternativeOrderNumberPrefix("new-");
+config.setAlternativeOrderNumberSuffix("-1");
+
+OpenApiClient client = new DefaultOpenApiClient(config);
+
+BarCodePayRequest request = new BarCodePayRequest("partial001", 123.45, "this is a test order", "134512345678901234");
+BarCodePayResponse response = client.barCodePay(request);
+
+// this becomes partial payment
+response.isPartialPayment(); // = true
+response.getOrderNo(); // = new-partial001-1
+response.getTransactionAmount(); // = user's Snaplii balance
+response.getTotalAmount(); // = initial payment amount which is 123.45
+response.getOutstandingAmount(); // = 123.45 - user's Snaplii balance
+```
+
+*Create custom AlternativeOrderNumberGenerator*
+
+```java
+public class MyAlternativeOrderNumberGenerator implements AlternativeOrderNumberGenerator {
+    // this generator just replace the last 3 digits from original order number with a random number
+    public String generato(ConfigurationHolder config, String orderNo) {
+        Random random = new Random();
+        int randomInt = random.nextInt(1000);
+        return orderNo.substring(0, orderNo.length() - 3) + String.format("%03d", randomInt);
+    }
+}
+```
