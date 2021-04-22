@@ -35,6 +35,10 @@
       <tag>HEAD</tag>
   </scm>
 
+    <properties>
+        <gpgpassphrase>replace the value</gpgpassphrase>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -197,7 +201,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <gpg.passphrase>aEP7iHuAP9&amp;D</gpg.passphrase>
+                <gpg.passphrase>${gpgpassphrase}</gpg.passphrase>
             </properties>
         </profile>
         <profile>
