@@ -158,7 +158,10 @@ RevokeOrderResponse response = client.revokeOrder(request);
 OpenApiClient client = new DefaultOpenApiClient();
 
 // order number is the original order number, refund order number is for the refund transaction, and has to be unique
-RefundOrderRequest request = new RefundOrderRequest("testorder001", "testorder100", 50);
+RefundOrderRequest request = new RefundOrderRequest("testorder100", 50);
+request.setOrderNo("testorder001");
+// it is also possible to refund based on transaction number
+// request.setTransactionNo("T01234567890");
 RevokeOrderResponse response = client.refundOrder(request);
 ```
 
