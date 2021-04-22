@@ -187,7 +187,8 @@ public class DefaultOpenApiClientTest {
     @Test
     public void testOrderRefund() throws OpenApiException {
         String orderNo = String.valueOf(System.nanoTime());
-        RefundOrderRequest request = new RefundOrderRequest(orderNo, "REF-" + orderNo, 0.01);
+        RefundOrderRequest request = new RefundOrderRequest("REF-" + orderNo, 0.01);
+        request.setOrderNo(orderNo);
 
         RefundOrderResponse response = client.refundOrder(request);
 
