@@ -18,6 +18,13 @@ package ca.snappay.openapi.extension;
 import org.apache.commons.lang.StringUtils;
 import ca.snappay.openapi.config.ConfigurationHolder;
 
+/**
+ * This is a simple implementation of <code>AlternativeOrderNumberGenerator</code> interface, which just concatenate
+ * prefix and suffix to the original order number to form a new order number for the partial payment.
+ *
+ * @author shawndu
+ * @version 1.0
+ */
 public class DefaultAlternativeOrderNumberGenerator implements AlternativeOrderNumberGenerator {
 
     @Override

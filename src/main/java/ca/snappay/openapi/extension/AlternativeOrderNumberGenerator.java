@@ -18,7 +18,8 @@ package ca.snappay.openapi.extension;
 import ca.snappay.openapi.config.ConfigurationHolder;
 
 /**
- * 
+ * The extension of the API to support partial payment. User might need to implement this interface on order to
+ * customize the order number of the partial payment (which is different from the original order number).
  *
  * @author shawndu
  * @version 1.0
