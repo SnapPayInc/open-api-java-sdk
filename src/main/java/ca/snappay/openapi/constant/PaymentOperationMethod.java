@@ -15,6 +15,8 @@
  */
 package ca.snappay.openapi.constant;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * The payment operation method.
  *
@@ -23,37 +25,19 @@ package ca.snappay.openapi.constant;
  */
 public enum PaymentOperationMethod {
 
+    @SerializedName("4")
     QR_CODE_PAY,
 
+    @SerializedName("5")
     BAR_CODE_PAY,
 
+    @SerializedName("6")
     H5_PAY,
 
+    @SerializedName("8")
     NATIVE_APP_PAY,
 
+    @SerializedName("9")
     WEB_PAY;
-
-    /**
-     * Gets a payment operation method from the given code.
-     *
-     * @param code the code.
-     * @return the corresponding payment operation method.
-     */
-    public static PaymentOperationMethod getFromCode(int code) {
-        switch (code) {
-            case 4:
-                return QR_CODE_PAY;
-            case 5:
-                return BAR_CODE_PAY;
-            case 6:
-                return H5_PAY;
-            case 8:
-                return NATIVE_APP_PAY;
-            case 9:
-                return WEB_PAY;
-            default:
-                return null;
-        }
-    }
 
 }

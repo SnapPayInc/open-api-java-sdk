@@ -18,7 +18,6 @@ package ca.snappay.openapi.response.pay;
 import ca.snappay.openapi.constant.Currency;
 import ca.snappay.openapi.constant.PaymentMethod;
 import ca.snappay.openapi.constant.PaymentOperationMethod;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -42,9 +41,6 @@ public class BarCodePayResponseData extends AbstractPayResponseData {
     private PaymentMethod paymentMethod;
 
     @SerializedName("pay_operation_method")
-    private int paymentOperationMethodCode;
-
-    @Expose(deserialize = false, serialize = false)
     private PaymentOperationMethod paymentOperationMethod;
 
     @SerializedName("pay_user_account_id")
@@ -77,15 +73,10 @@ public class BarCodePayResponseData extends AbstractPayResponseData {
     @SerializedName("trans_end_time")
     private LocalDateTime completionTime;
 
-    private Boolean partialPayment;
+    private boolean partialPayment;
 
     private Double totalAmount;
 
     private Double outstandingAmount;
-
-    public void setPaymentOperationMethodCode(int paymentOperationMethodCode) {
-        this.paymentOperationMethodCode = paymentOperationMethodCode;
-        this.paymentOperationMethod = PaymentOperationMethod.getFromCode(paymentOperationMethodCode);
-    }
 
 }

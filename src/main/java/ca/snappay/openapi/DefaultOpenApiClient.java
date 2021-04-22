@@ -89,7 +89,7 @@ public class DefaultOpenApiClient implements OpenApiClient {
     private static final String GATEWAY_PATH = "/api/gateway";
 
     private static final String INSUFFICIENT_BALANCE_ERROR_CODE = "E066006";
-    private static final Pattern CARD_BALANCE_PATTERN = Pattern.compile("current balance is \\((\\d+\\.?\\d*)\\)");
+    private static final Pattern CARD_BALANCE_PATTERN = Pattern.compile("^.+current balance is \\((\\d+\\.?\\d*)\\)\\.$");
     
     private final ConfigurationHolder config;
     private final URI requestUri;
