@@ -71,6 +71,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -194,6 +195,25 @@ public class DefaultOpenApiClient implements OpenApiClient {
 
     @Override
     public RefundOrderResponse refundOrder(RefundOrderRequest request) throws OpenApiException {
+        // if transactionNo is provided, first query the order to get orderNo, then do the refund
+        if (request.getOrderNo() == null && request.getTransactionNo() != null) {
+            QueryOrderRequest queryRequest = new QueryOrderRequest();
+            queryRequest.setTransactionNo(request.getTransactionNo());
+            QueryOrderResponse queryResponse = queryOrder(queryRequest);
+            if (queryResponse.isSuccessful()) {
+                request.setOrderNo(queryResponse.getData().get(0).getOrderNo());
+                request.setTransactionNo(null);
+            } else {
+                RefundOrderResponse response = new RefundOrderResponse();
+                response.setCode(queryResponse.getCode());
+                response.setMessage(queryResponse.getMessage());
+                response.setPsn(response.getPsn());
+                response.setTotal(response.getTotal());
+                response.setData(Collections.emptyList());
+                response.setSign(response.getSign());
+                return response;
+            }
+        }
         return execute(request);
     }
 

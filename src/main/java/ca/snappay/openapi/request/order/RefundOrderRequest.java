@@ -16,6 +16,7 @@
 package ca.snappay.openapi.request.order;
 
 import ca.snappay.openapi.response.order.RefundOrderResponse;
+import org.apache.commons.lang.StringUtils;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,6 +35,8 @@ public class RefundOrderRequest extends AbstractOrderRequest<RefundOrderResponse
 
     private static final String REQUEST_METHOD = "pay.orderrefund";
 
+    private String transactionNo;
+
     @SerializedName("out_refund_no")
     private String refundOrderNo;
 
@@ -48,15 +51,20 @@ public class RefundOrderRequest extends AbstractOrderRequest<RefundOrderResponse
         return REQUEST_METHOD;
     }
 
-    public RefundOrderRequest(String orderNo, String refundOrderNo, Double refundAmount) {
-        setOrderNo(orderNo);
+    public RefundOrderRequest(String refundOrderNo, Double refundAmount) {
         this.refundOrderNo = refundOrderNo;
         this.refundAmount = refundAmount;
     }
 
     @Override
     public void validate() {
-        super.validate();
+        if ((StringUtils.isEmpty(getOrderNo()) && StringUtils.isEmpty(transactionNo))
+                || (StringUtils.isNotEmpty(getOrderNo()) && StringUtils.isNotEmpty(transactionNo))) {
+            throw new IllegalArgumentException("Either orderNo or transactionNo needs to be provided, but not both");
+        }
+
+        validateLength("orderNo", getOrderNo(), 64);
+        validateLength("transactionNo", transactionNo, 64);
 
         validateRequired("refundOrderNo", refundOrderNo);
         validateLength("refundOrderNo", refundOrderNo, 64);
