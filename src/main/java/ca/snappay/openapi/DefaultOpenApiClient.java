@@ -257,7 +257,7 @@ public class DefaultOpenApiClient implements OpenApiClient {
             log.debug("Response from OpenAPI gateway, receive data[" + resultStr + "]");
         } catch (Exception e) {
             log.error("Request to OpenAPI gateway failed", e);
-            throw new OpenApiException("-102", "Request to open service gateway fail");
+            throw new OpenApiException("-102", "Request to open service gateway fail", e);
         } finally {
             if (response != null) {
                 try {
