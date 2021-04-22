@@ -45,7 +45,8 @@ public class QueryOrderRequest extends AbstractOrderRequest<QueryOrderResponse> 
 
     @Override
     public void validate() {
-        if (StringUtils.isEmpty(getOrderNo()) && StringUtils.isEmpty(transactionNo)) {
+        if (StringUtils.isEmpty(getOrderNo()) && StringUtils.isEmpty(transactionNo)
+                || (StringUtils.isNotEmpty(getOrderNo()) && StringUtils.isNotEmpty(transactionNo))) {
             throw new IllegalArgumentException("Either orderNo or transactionNo needs to be provided");
         }
         validateLength("orderNo", getOrderNo(), 64);
