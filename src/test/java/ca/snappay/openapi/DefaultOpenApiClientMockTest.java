@@ -43,7 +43,10 @@ import ca.snappay.openapi.constant.PaymentOperationMethod;
 import ca.snappay.openapi.constant.SignType;
 import ca.snappay.openapi.constant.TransactionStatus;
 import ca.snappay.openapi.request.ExtensionParameters;
+import ca.snappay.openapi.request.order.RefundOrderRequest;
 import ca.snappay.openapi.request.pay.BarCodePayRequest;
+import ca.snappay.openapi.response.order.RefundOrderResponse;
+import ca.snappay.openapi.response.order.RefundOrderResponseData;
 import ca.snappay.openapi.response.pay.BarCodePayResponse;
 import ca.snappay.openapi.response.pay.BarCodePayResponseData;
 
@@ -138,22 +141,22 @@ public class DefaultOpenApiClientMockTest {
 
     @Test
     public void testBarCodePay_Success() throws OpenApiException, ClientProtocolException, IOException {
-        String data = "{\"trans_no\":\"TRANS12345\"," +
-            "\"out_order_no\":\"test1\"," +
-            "\"merchant_no\":\"" + config.getMerchantNo() + "\"," +
-            "\"trans_status\":\"SUCCESS\"," +
-            "\"payment_method\":\"ALIPAY\"," +
-            "\"pay_operation_method\":5," +
-            "\"pay_user_account_id\":\"2088101117955611\"," +
-            "\"pay_user_account_name\":\"15900000000\"," +
-            "\"trans_currency\":\"CAD\"," +
-            "\"exchange_rate\":5.21," +
-            "\"trans_amount\":123.45," +
-            "\"c_trans_fee\":2.5," +
-            "\"customer_paid_amount\":524.09," +
-            "\"discount_bmopc\":0.0," +
-            "\"discount_bpc\":0.0," +
-            "\"trans_end_time\":\"2021-03-02 15:16:55\"}";
+        String data = "{\"trans_no\":\"TRANS12345\","
+            + "\"out_order_no\":\"test1\","
+            + "\"merchant_no\":\"" + config.getMerchantNo() + "\","
+            + "\"trans_status\":\"SUCCESS\","
+            + "\"payment_method\":\"ALIPAY\","
+            + "\"pay_operation_method\":5,"
+            + "\"pay_user_account_id\":\"2088101117955611\","
+            + "\"pay_user_account_name\":\"15900000000\","
+            + "\"trans_currency\":\"CAD\","
+            + "\"exchange_rate\":5.21,"
+            + "\"trans_amount\":123.45,"
+            + "\"c_trans_fee\":2.5,"
+            + "\"customer_paid_amount\":524.09,"
+            + "\"discount_bmopc\":0.0,"
+            + "\"discount_bpc\":0.0,"
+            + "\"trans_end_time\":\"2021-03-02 15:16:55\"}";
         HttpEntity entity = new StringEntity("{\"code\":\"0\",\"msg\":\"payment successful\",\"total\":1,\"psn\":\"12345\",\"sign\":\"5259982d84faab397e758e82b0b4324e\",\"data\":[" + data + "]}", ContentType.APPLICATION_JSON);
         when(httpClient.execute(any())).thenReturn(httpResponse);
         when(httpResponse.getStatusLine()).thenReturn(statusLine);
@@ -166,7 +169,7 @@ public class DefaultOpenApiClientMockTest {
         request.setExtensionParameters(extensionParams);
         BarCodePayResponse response = client.barCodePay(request);
 
-        Mockito.verify(httpClient).execute(postCaptor.capture());
+        verify(httpClient).execute(postCaptor.capture());
         HttpPost post = postCaptor.getValue();
         String postStr = EntityUtils.toString(post.getEntity(), Constants.CHARSET_UTF8);
         JsonObject postJson = JsonParser.parseString(postStr).getAsJsonObject();
@@ -205,22 +208,22 @@ public class DefaultOpenApiClientMockTest {
     public void testBarCodePay_PartialPayment() throws OpenApiException, ClientProtocolException, IOException {
         config.setPartialPaymentSupported(true);
         config.setAlternativeOrderNumberPrefix("new-");
-        String data = "{\"trans_no\":\"TRANS12345\"," +
-            "\"out_order_no\":\"test1\"," +
-            "\"merchant_no\":\"" + config.getMerchantNo() + "\"," +
-            "\"trans_status\":\"SUCCESS\"," +
-            "\"payment_method\":\"ALIPAY\"," +
-            "\"pay_operation_method\":5," +
-            "\"pay_user_account_id\":\"2088101117955611\"," +
-            "\"pay_user_account_name\":\"15900000000\"," +
-            "\"trans_currency\":\"CAD\"," +
-            "\"exchange_rate\":5.21," +
-            "\"trans_amount\":50.24," +
-            "\"c_trans_fee\":2.5," +
-            "\"customer_paid_amount\":524.09," +
-            "\"discount_bmopc\":0.0," +
-            "\"discount_bpc\":0.0," +
-            "\"trans_end_time\":\"2021-03-02 15:16:55\"}";
+        String data = "{\"trans_no\":\"TRANS12345\","
+            + "\"out_order_no\":\"test1\","
+            + "\"merchant_no\":\"" + config.getMerchantNo() + "\","
+            + "\"trans_status\":\"SUCCESS\","
+            + "\"payment_method\":\"ALIPAY\","
+            + "\"pay_operation_method\":5,"
+            + "\"pay_user_account_id\":\"2088101117955611\","
+            + "\"pay_user_account_name\":\"15900000000\","
+            + "\"trans_currency\":\"CAD\","
+            + "\"exchange_rate\":5.21,"
+            + "\"trans_amount\":50.24,"
+            + "\"c_trans_fee\":2.5,"
+            + "\"customer_paid_amount\":524.09,"
+            + "\"discount_bmopc\":0.0,"
+            + "\"discount_bpc\":0.0,"
+            + "\"trans_end_time\":\"2021-03-02 15:16:55\"}";
         HttpEntity entity1 = new StringEntity("{\"code\":\"E066006\",\"msg\":\"Insufficient balance, current balance is (50.24).\",\"total\":0,\"psn\":\"12345\",\"sign\":\"6b5d0c4ed27f90da5dd485588dbcfcc0\",\"data\":[]}", ContentType.APPLICATION_JSON);
         HttpEntity entity2 = new StringEntity("{\"code\":\"0\",\"msg\":\"payment successful\",\"total\":1,\"psn\":\"12345\",\"sign\":\"f512d47248fe697b29f72d20e2f36d56\",\"data\":[" + data + "]}", ContentType.APPLICATION_JSON);
         when(httpClient.execute(any())).thenReturn(httpResponse);
@@ -278,6 +281,114 @@ public class DefaultOpenApiClientMockTest {
         assertTrue(responseData.isPartialPayment());
         assertEquals(123.45, responseData.getTotalAmount());
         assertEquals(123.45 - 50.24, responseData.getOutstandingAmount());
+    }
+
+    @Test
+    public void testRefundOrder_OrderNo() throws OpenApiException, ClientProtocolException, IOException {
+        String data = "{\"trans_no\": \"TRANS12345\","
+            + "\"out_order_no\": \"test1\","
+            + "\"out_refund_no\": \"refund1\","
+            + "\"trans_status\": \"SUCCESS\","
+            + "\"refund_trans_no\": \"TRANS67890\","
+            + "\"refund_trans_end_time\": \"2021-03-02 15:32:45\"}";
+        HttpEntity entity = new StringEntity("{\"code\":\"0\",\"msg\":\"refund successful\",\"total\":1,\"psn\":\"12345\",\"sign\":\"ebcabe64d25c747e88240bf3c0ae450e\",\"data\":[" + data + "]}", ContentType.APPLICATION_JSON);
+        when(httpClient.execute(any())).thenReturn(httpResponse);
+        when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        when(statusLine.getStatusCode()).thenReturn(200);
+        when(httpResponse.getEntity()).thenReturn(entity);
+
+        RefundOrderRequest request = new RefundOrderRequest("refund1", 23.45);
+        request.setOrderNo("test1");
+        RefundOrderResponse response = client.refundOrder(request);
+
+        verify(httpClient).execute(postCaptor.capture());
+        HttpPost post = postCaptor.getValue();
+        String postStr = EntityUtils.toString(post.getEntity(), Constants.CHARSET_UTF8);
+        JsonObject postJson = JsonParser.parseString(postStr).getAsJsonObject();
+
+        verifyBasicFields(postJson, "pay.orderrefund");
+        assertEquals("test1", postJson.get("out_order_no").getAsString());
+        assertEquals("refund1", postJson.get("out_refund_no").getAsString());
+        assertEquals(23.45, postJson.get("refund_amount").getAsDouble());
+
+        assertEquals("0", response.getCode());
+        assertEquals("refund successful", response.getMessage());
+        assertEquals("12345", response.getPsn());
+        assertEquals("ebcabe64d25c747e88240bf3c0ae450e", response.getSign());
+        assertEquals(1, response.getData().size());
+        RefundOrderResponseData responseData = response.getData().get(0);
+        assertEquals("TRANS12345", responseData.getTransactionNo());
+        assertEquals("TRANS67890", responseData.getRefundTransactionNo());
+        assertEquals("test1", responseData.getOrderNo());
+        assertEquals("refund1", responseData.getRefundOrderNo());
+        assertEquals(TransactionStatus.SUCCESS, responseData.getTransactionStatus());
+        assertEquals(LocalDateTime.of(2021, 3, 2, 15, 32, 45), responseData.getRefundCompletionTime());
+    }
+
+    @Test
+    public void testRefundOrder_TransactionNo() throws OpenApiException, ClientProtocolException, IOException {
+        String data1 = "{\"trans_no\":\"TRANS12345\","
+            + "\"out_order_no\":\"test1\","
+            + "\"merchant_no\":\"" + config.getMerchantNo() + "\","
+            + "\"trans_status\":\"SUCCESS\","
+            + "\"payment_method\":\"ALIPAY\","
+            + "\"pay_operation_method\":5,"
+            + "\"pay_user_account_id\":\"2088101117955611\","
+            + "\"pay_user_account_name\":\"15900000000\","
+            + "\"trans_currency\":\"CAD\","
+            + "\"exchange_rate\":5.21,"
+            + "\"trans_amount\":50.24,"
+            + "\"c_trans_fee\":2.5,"
+            + "\"customer_paid_amount\":524.09,"
+            + "\"discount_bmopc\":0.0,"
+            + "\"discount_bpc\":0.0,"
+            + "\"trans_end_time\":\"2021-03-02 15:16:55\","
+            + "\"attach\":\"{\\\"test\\\":\\\"value\\\"}\"}";
+        HttpEntity entity1 = new StringEntity("{\"code\":\"0\",\"msg\":\"query successful\",\"total\":1,\"psn\":\"12345\",\"sign\":\"87946cde03ebce206c4e22b423a06cfe\",\"data\":[" + data1 + "]}", ContentType.APPLICATION_JSON);
+        String data2 = "{\"trans_no\": \"TRANS12345\","
+            + "\"out_order_no\": \"test1\","
+            + "\"out_refund_no\": \"refund1\","
+            + "\"trans_status\": \"SUCCESS\","
+            + "\"refund_trans_no\": \"TRANS67890\","
+            + "\"refund_trans_end_time\": \"2021-03-02 15:32:45\"}";
+        HttpEntity entity2 = new StringEntity("{\"code\":\"0\",\"msg\":\"refund successful\",\"total\":1,\"psn\":\"12345\",\"sign\":\"ebcabe64d25c747e88240bf3c0ae450e\",\"data\":[" + data2 + "]}", ContentType.APPLICATION_JSON);
+        when(httpClient.execute(any())).thenReturn(httpResponse);
+        when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        when(statusLine.getStatusCode()).thenReturn(200);
+        when(httpResponse.getEntity()).thenReturn(entity1, entity2);
+
+        RefundOrderRequest request = new RefundOrderRequest("refund1", 23.45);
+        request.setTransactionNo("TRANS12345");
+        RefundOrderResponse response = client.refundOrder(request);
+
+        verify(httpClient, times(2)).execute(postCaptor.capture());
+        List<HttpPost> posts = postCaptor.getAllValues();
+        String postStr = EntityUtils.toString(posts.get(0).getEntity(), Constants.CHARSET_UTF8);
+        JsonObject postJson = JsonParser.parseString(postStr).getAsJsonObject();
+
+        verifyBasicFields(postJson, "pay.orderquery");
+        assertEquals("TRANS12345", postJson.get("trans_no").getAsString());
+
+        postStr = EntityUtils.toString(posts.get(1).getEntity(), Constants.CHARSET_UTF8);
+        postJson = JsonParser.parseString(postStr).getAsJsonObject();
+
+        verifyBasicFields(postJson, "pay.orderrefund");
+        assertEquals("test1", postJson.get("out_order_no").getAsString());
+        assertEquals("refund1", postJson.get("out_refund_no").getAsString());
+        assertEquals(23.45, postJson.get("refund_amount").getAsDouble());
+
+        assertEquals("0", response.getCode());
+        assertEquals("refund successful", response.getMessage());
+        assertEquals("12345", response.getPsn());
+        assertEquals("ebcabe64d25c747e88240bf3c0ae450e", response.getSign());
+        assertEquals(1, response.getData().size());
+        RefundOrderResponseData responseData = response.getData().get(0);
+        assertEquals("TRANS12345", responseData.getTransactionNo());
+        assertEquals("TRANS67890", responseData.getRefundTransactionNo());
+        assertEquals("test1", responseData.getOrderNo());
+        assertEquals("refund1", responseData.getRefundOrderNo());
+        assertEquals(TransactionStatus.SUCCESS, responseData.getTransactionStatus());
+        assertEquals(LocalDateTime.of(2021, 3, 2, 15, 32, 45), responseData.getRefundCompletionTime());
     }
 
     private void verifyBasicFields(JsonObject json, String method) {
