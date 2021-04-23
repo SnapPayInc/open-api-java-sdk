@@ -15,6 +15,8 @@
  */
 package ca.snappay.openapi.constant;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * The payment method. Can be any of AliPay, WeChatPay, or UnionPay.
  *
@@ -23,26 +25,17 @@ package ca.snappay.openapi.constant;
  */
 public enum PaymentMethod {
 
-    ALIPAY("ALIPAY"),
+    ALIPAY,
 
-    WECHATPAY("WECHATPAY"),
+    WECHATPAY,
 
-    UNIONPAY("UNIONPAY"),
+    UNIONPAY,
 
-    UNIONPAY_QR("UNIONPAY_QR"),
+    UNIONPAY_QR,
 
-    SNAPLII("SNAPLII"),
+    SNAPLII,
 
-    CREDITCARD_PAYBYTOKEN("CREDITCARD.PAYBYTOKEN");
+    @SerializedName("CREDITCARD.PAYBYTOKEN")
+    CREDITCARD_PAYBYTOKEN;
 
-    private String name;
-
-    private PaymentMethod(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
 }
