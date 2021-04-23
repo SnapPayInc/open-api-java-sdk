@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ca.snappay</groupId>
     <artifactId>openapi-java-sdk</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0-RC3</version>
     <packaging>jar</packaging>
 
     <name>SnapPay OpenAPI Java SDK</name>
@@ -32,7 +32,7 @@
         <connection>scm:git:git://github.com:SnapPayInc/open-api-java-sdk.git</connection>
         <developerConnection>scm:git:git://github.com:SnapPayInc/open-api-java-sdk.git</developerConnection>
         <url>https://github.com/SnapPayInc/open-api-java-sdk</url>
-      <tag>HEAD</tag>
+      <tag>release-1.2.0-RC3</tag>
   </scm>
 
     <dependencies>
