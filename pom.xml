@@ -35,10 +35,6 @@
       <tag>HEAD</tag>
   </scm>
 
-    <properties>
-        <gpgpassphrase>replace the value</gpgpassphrase>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -207,15 +203,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>ossrh</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <gpg.passphrase>${gpgpassphrase}</gpg.passphrase>
-            </properties>
-        </profile>
         <profile>
             <id>release-sign-artifacts</id>
             <activation>
