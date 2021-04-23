@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,7 +46,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -87,7 +87,7 @@ public class DefaultOpenApiClientMockTest {
 
     @BeforeEach
     public void setup() {
-        httpClientsMock = Mockito.mockStatic(HttpClients.class);
+        httpClientsMock = mockStatic(HttpClients.class);
         when(HttpClients.custom()).thenReturn(builder);
         when(builder.setDefaultRequestConfig(any())).thenReturn(builder);
         when(builder.build()).thenReturn(httpClient);
@@ -136,7 +136,7 @@ public class DefaultOpenApiClientMockTest {
         request.setExtensionParameters(extensionParams);
         BarCodePayResponse response = client.barCodePay(request);
 
-        Mockito.verify(httpClient).execute(postCaptor.capture());
+        verify(httpClient).execute(postCaptor.capture());
         HttpPost post = postCaptor.getValue();
         String postStr = EntityUtils.toString(post.getEntity(), Constants.CHARSET_UTF8);
         JsonObject postJson = JsonParser.parseString(postStr).getAsJsonObject();

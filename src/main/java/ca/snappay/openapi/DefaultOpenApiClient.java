@@ -146,7 +146,7 @@ public class DefaultOpenApiClient implements OpenApiClient {
                     // new order number is required since the acquiring system does not allow duplicate order numbers
                     request.setOrderNo(alternativeOrderNumberGenerator.generate(config, request.getOrderNo()));
                     response = execute(request);
-                    // if payment is successful, set additional fields for order split
+                    // if payment is successful, set additional fields for partial payment
                     if (response.isSuccessful()) {
                         response.getData().get(0).setPartialPayment(true);
                         response.getData().get(0).setTotalAmount(initialAmount);
