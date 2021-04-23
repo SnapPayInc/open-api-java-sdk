@@ -19,7 +19,7 @@ import ca.snappay.openapi.response.order.RevokeOrderResponse;
 import lombok.ToString;
 
 /**
- * The response for order revoke.
+ * The request for order revoke.
  *
  * @author shawndu
  * @version 1.0

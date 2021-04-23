@@ -35,6 +35,10 @@
       <tag>HEAD</tag>
   </scm>
 
+    <properties>
+        <gpgpassphrase>replace the value</gpgpassphrase>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -71,6 +75,18 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.5.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>3.9.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>3.9.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -197,7 +213,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <gpg.passphrase>aEP7iHuAP9&amp;D</gpg.passphrase>
+                <gpg.passphrase>${gpgpassphrase}</gpg.passphrase>
             </properties>
         </profile>
         <profile>

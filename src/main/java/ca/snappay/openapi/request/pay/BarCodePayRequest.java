@@ -36,6 +36,8 @@ public class BarCodePayRequest extends AbstractPayRequest<BarCodePayResponse> {
 
     private static final String REQUEST_METHOD = "pay.barcodepay";
 
+    private static final String SNAPLII_PAYMENT_PATTERN = "^88\\d{16}$";
+
     @SerializedName("auth_code")
     private String authCode;
 
@@ -68,6 +70,15 @@ public class BarCodePayRequest extends AbstractPayRequest<BarCodePayResponse> {
     @Override
     protected boolean isPaymentMethodRequired() {
         return false;
+    }
+
+    /**
+     * Checks if the payment is for Snaplii.
+     *
+     * @return true if this is Snaplii payment, or false otherwise.
+     */
+    public boolean isSnapliiPayment() {
+        return authCode.matches(SNAPLII_PAYMENT_PATTERN);
     }
 
 }

@@ -13,31 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.snappay.openapi.constant;
+package ca.snappay.openapi.request.card;
 
-import com.google.gson.annotations.SerializedName;
+import ca.snappay.openapi.response.card.QueryCardResponse;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * The payment operation method.
+ * The request for card query.
  *
  * @author shawndu
  * @version 1.0
  */
-public enum PaymentOperationMethod {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class QueryCardRequest extends AbstractCardRequest<QueryCardResponse> {
 
-    @SerializedName("4")
-    QR_CODE_PAY,
+    private static final String REQUEST_METHOD = "card.query";
 
-    @SerializedName("5")
-    BAR_CODE_PAY,
+    @Override
+    public String getRequestMethod() {
+        return REQUEST_METHOD;
+    }
 
-    @SerializedName("6")
-    H5_PAY,
-
-    @SerializedName("8")
-    NATIVE_APP_PAY,
-
-    @SerializedName("9")
-    WEB_PAY;
+    public QueryCardRequest(String cardNo) {
+        setCardNo(cardNo);
+    }
 
 }

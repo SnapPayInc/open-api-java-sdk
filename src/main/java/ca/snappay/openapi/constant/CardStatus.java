@@ -18,26 +18,41 @@ package ca.snappay.openapi.constant;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * The payment operation method.
+ * This enum represents the different card statuses.
  *
  * @author shawndu
  * @version 1.0
  */
-public enum PaymentOperationMethod {
+public enum CardStatus {
 
+    /**
+     * Card is reported lost.
+     */
+    @SerializedName("3")
+    LOST,
+
+    /**
+     * Card is not activated.
+     */
     @SerializedName("4")
-    QR_CODE_PAY,
+    UNACTIVATED,
 
+    /**
+     * Card is activated but not used.
+     */
     @SerializedName("5")
-    BAR_CODE_PAY,
+    ACTIVATED,
 
+    /**
+     * Card is used (activated in phone app).
+     */
     @SerializedName("6")
-    H5_PAY,
+    USED,
 
-    @SerializedName("8")
-    NATIVE_APP_PAY,
-
-    @SerializedName("9")
-    WEB_PAY;
+    /**
+     * Card is refunded.
+     */
+    @SerializedName("7")
+    REFUNDED;
 
 }

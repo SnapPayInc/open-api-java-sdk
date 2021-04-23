@@ -13,31 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.snappay.openapi.constant;
+package ca.snappay.openapi.response.card;
 
+import java.time.LocalDateTime;
 import com.google.gson.annotations.SerializedName;
+import ca.snappay.openapi.response.OpenApiResponseData;
+import lombok.Data;
 
 /**
- * The payment operation method.
+ * This abstract class contains the common attributes for all card response data.
  *
  * @author shawndu
  * @version 1.0
  */
-public enum PaymentOperationMethod {
+@Data
+public abstract class AbstractCardResponseData implements OpenApiResponseData {
 
-    @SerializedName("4")
-    QR_CODE_PAY,
+    @SerializedName("face_value")
+    private Double faceValue;
 
-    @SerializedName("5")
-    BAR_CODE_PAY,
+    @SerializedName("giftcard_type")
+    private String cardType;
 
-    @SerializedName("6")
-    H5_PAY,
+    @SerializedName("activate_end_time")
+    private LocalDateTime activateEndTime;
 
-    @SerializedName("8")
-    NATIVE_APP_PAY,
+    @SerializedName("expiry_date")
+    private LocalDateTime expiryDate;
 
-    @SerializedName("9")
-    WEB_PAY;
+    @SerializedName("jrn_no")
+    private String jrnNo;
 
 }

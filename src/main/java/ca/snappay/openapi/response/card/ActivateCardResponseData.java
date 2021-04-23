@@ -13,31 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.snappay.openapi.constant;
-
-import com.google.gson.annotations.SerializedName;
+package ca.snappay.openapi.response.card;
 
 /**
- * The payment operation method.
+ * The response data for card activation.
  *
  * @author shawndu
  * @version 1.0
  */
-public enum PaymentOperationMethod {
-
-    @SerializedName("4")
-    QR_CODE_PAY,
-
-    @SerializedName("5")
-    BAR_CODE_PAY,
-
-    @SerializedName("6")
-    H5_PAY,
-
-    @SerializedName("8")
-    NATIVE_APP_PAY,
-
-    @SerializedName("9")
-    WEB_PAY;
-
+public class ActivateCardResponseData extends AbstractCardResponseData {
 }
