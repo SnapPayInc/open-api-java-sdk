@@ -12,7 +12,7 @@ If you use Apache Maven, just add the following dependency to pom.xml.
 <dependency>
     <groupId>ca.snappay</groupId>
     <artifactId>openapi-java-sdk</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.0-RC2</version>
 </dependency>
 ```
 
@@ -173,6 +173,33 @@ OpenApiClient client = new DefaultOpenApiClient();
 // only ALIPAY and WECHAT are supported, exchange rate is for reference only
 QueryExchangeRateRequest request = new QueryExchangeRateRequest(Currency.CAD, PaymentMethod.WECHAT);
 QueryExchangeRateResponse response = client.queryExchangeRate(request);
+```
+
+**Activate Snaplii gift card**
+
+```java
+OpenApiClient client = new DefaultOpenApiClient();
+
+ActivateCardRequest request = new ActivateCardRequest("123456789012");
+ActivateCardResponse response = client.activateCard(request);
+```
+
+**Refund Snaplii gift card**
+
+```java
+OpenApiClient client = new DefaultOpenApiClient();
+
+RefundCardRequest request = new RefundCardRequest("123456789012");
+RefundCardResponse response = client.refundCard(request);
+```
+
+**Query Snaplii gift card**
+
+```java
+OpenApiClient client = new DefaultOpenApiClient();
+
+QueryCardRequest request = new QueryCardRequest("123456789012");
+QueryCardResponse response = client.queryCard(request);
 ```
 
 **Payment workflow demo (barcode payment)**
