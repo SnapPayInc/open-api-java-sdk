@@ -15,9 +15,8 @@
  */
 package ca.snappay.openapi.request.pay;
 
-import ca.snappay.openapi.constant.BrowserType;
 import ca.snappay.openapi.constant.PaymentMethod;
-import ca.snappay.openapi.response.pay.WebsitePayResponse;
+import ca.snappay.openapi.response.pay.OneForAllPayResponse;
 import java.util.EnumSet;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
@@ -25,7 +24,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * The request for website payment.
+ * The request for one-for-all payment.
  *
  * @author shawndu
  * @version 1.0
@@ -33,12 +32,9 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class WebsitePayRequest extends AbstractPayRequest<WebsitePayResponse> {
+public class OneForAllPayRequest extends AbstractPayRequest<OneForAllPayResponse> {
 
-    private static final String REQUEST_METHOD = "pay.webpay";
-
-    @SerializedName("browser_type")
-    private BrowserType browserType;
+    private static final String REQUEST_METHOD = "pay.oneforall";
 
     @SerializedName("return_url")
     private String returnUrl;
@@ -48,7 +44,7 @@ public class WebsitePayRequest extends AbstractPayRequest<WebsitePayResponse> {
         return REQUEST_METHOD;
     }
 
-    public WebsitePayRequest(PaymentMethod paymentMethod, String orderNo, Double amount, String description) {
+    public OneForAllPayRequest(PaymentMethod paymentMethod, String orderNo, Double amount, String description, String payUserAccountId) {
       setPaymentMethod(paymentMethod);
       setOrderNo(orderNo);
       setAmount(amount);
@@ -59,16 +55,17 @@ public class WebsitePayRequest extends AbstractPayRequest<WebsitePayResponse> {
     public void validate() {
         super.validate();
 
-        if ((getPaymentMethod() == PaymentMethod.UNIONPAY || getPaymentMethod() == PaymentMethod.CREDITCARD_PAYBYTOKEN)
-                && browserType == BrowserType.WAP) {
-            throw new IllegalArgumentException("WAP browser is not supported");
-        }
         validateLength("returnUrl", returnUrl, 1024);
     }
 
     @Override
+    protected boolean isPaymentMethodRequired() {
+      return false;
+    }
+
+    @Override
     protected EnumSet<PaymentMethod> applicablePaymentMethods() {
-        return EnumSet.of(PaymentMethod.ALIPAY, PaymentMethod.UNIONPAY, PaymentMethod.CREDITCARD_PAYBYTOKEN);
+        return null;
     }
 
 }
