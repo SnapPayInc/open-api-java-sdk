@@ -13,29 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.snappay.openapi.constant;
-
-import com.google.gson.annotations.SerializedName;
+package ca.snappay.openapi.response.card;
 
 /**
- * The payment method. Can be any of AliPay, WeChatPay, or UnionPay.
+ * The response data for card activation.
  *
  * @author shawndu
  * @version 1.0
  */
-public enum PaymentMethod {
-
-    ALIPAY,
-
-    WECHATPAY,
-
-    UNIONPAY,
-
-    UNIONPAY_QR,
-
-    SNAPLII,
-
-    @SerializedName("CREDITCARD.PAYBYTOKEN")
-    CREDITCARD_PAYBYTOKEN;
-
+public class ActivateCardResponseData extends AbstractCardResponseData {
 }

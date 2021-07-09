@@ -18,24 +18,41 @@ package ca.snappay.openapi.constant;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * The payment method. Can be any of AliPay, WeChatPay, or UnionPay.
+ * This enum represents the different card statuses.
  *
  * @author shawndu
  * @version 1.0
  */
-public enum PaymentMethod {
+public enum CardStatus {
 
-    ALIPAY,
+    /**
+     * Card is reported lost.
+     */
+    @SerializedName("3")
+    LOST,
 
-    WECHATPAY,
+    /**
+     * Card is not activated.
+     */
+    @SerializedName("4")
+    UNACTIVATED,
 
-    UNIONPAY,
+    /**
+     * Card is activated but not used.
+     */
+    @SerializedName("5")
+    ACTIVATED,
 
-    UNIONPAY_QR,
+    /**
+     * Card is used (activated in phone app).
+     */
+    @SerializedName("6")
+    USED,
 
-    SNAPLII,
-
-    @SerializedName("CREDITCARD.PAYBYTOKEN")
-    CREDITCARD_PAYBYTOKEN;
+    /**
+     * Card is refunded.
+     */
+    @SerializedName("7")
+    REFUNDED;
 
 }

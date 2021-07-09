@@ -16,7 +16,7 @@
 package ca.snappay.openapi.request.pay;
 
 import ca.snappay.openapi.constant.PaymentMethod;
-import ca.snappay.openapi.response.pay.BarCodePayResponse;
+import ca.snappay.openapi.response.pay.OneForAllPayResponse;
 import java.util.EnumSet;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
@@ -24,7 +24,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * The request for barcode payment.
+ * The request for one-for-all payment.
  *
  * @author shawndu
  * @version 1.0
@@ -32,53 +32,40 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class BarCodePayRequest extends AbstractPayRequest<BarCodePayResponse> {
+public class OneForAllPayRequest extends AbstractPayRequest<OneForAllPayResponse> {
 
-    private static final String REQUEST_METHOD = "pay.barcodepay";
+    private static final String REQUEST_METHOD = "pay.oneforall";
 
-    private static final String SNAPLII_PAYMENT_PATTERN = "^88\\d{16}$";
-
-    @SerializedName("auth_code")
-    private String authCode;
+    @SerializedName("return_url")
+    private String returnUrl;
 
     @Override
     public String getRequestMethod() {
         return REQUEST_METHOD;
     }
 
-    public BarCodePayRequest(String orderNo, Double amount, String description, String authCode) {
-        setOrderNo(orderNo);
-        setAmount(amount);
-        setDescription(description);
-        this.authCode = authCode;
-    }
+    public OneForAllPayRequest(PaymentMethod paymentMethod, String orderNo, Double amount, String description, String payUserAccountId) {
+      setPaymentMethod(paymentMethod);
+      setOrderNo(orderNo);
+      setAmount(amount);
+      setDescription(description);
+  }
 
     @Override
     public void validate() {
         super.validate();
 
-        validateRequired("authCode", authCode);
-        validateLength("authCode", authCode, 32);
-    }
-
-    @Override
-    protected EnumSet<PaymentMethod> applicablePaymentMethods() {
-        return EnumSet.of(PaymentMethod.ALIPAY, PaymentMethod.WECHATPAY, PaymentMethod.UNIONPAY_QR,
-            PaymentMethod.SNAPLII);
+        validateLength("returnUrl", returnUrl, 1024);
     }
 
     @Override
     protected boolean isPaymentMethodRequired() {
-        return false;
+      return false;
     }
 
-    /**
-     * Checks if the payment is for Snaplii.
-     *
-     * @return true if this is Snaplii payment, or false otherwise.
-     */
-    public boolean isSnapliiPayment() {
-        return authCode.matches(SNAPLII_PAYMENT_PATTERN);
+    @Override
+    protected EnumSet<PaymentMethod> applicablePaymentMethods() {
+        return null;
     }
 
 }

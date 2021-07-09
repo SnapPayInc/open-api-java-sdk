@@ -63,7 +63,7 @@ public class WebsitePayRequest extends AbstractPayRequest<WebsitePayResponse> {
                 && browserType == BrowserType.WAP) {
             throw new IllegalArgumentException("WAP browser is not supported");
         }
-        validateLength("returnUrl", returnUrl, 256);
+        validateLength("returnUrl", returnUrl, 1024);
     }
 
     @Override
