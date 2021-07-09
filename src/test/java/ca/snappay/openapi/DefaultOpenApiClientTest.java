@@ -138,7 +138,7 @@ public class DefaultOpenApiClientTest {
 
     @Test
     public void testWebsitePay() throws OpenApiException {
-        WebsitePayRequest request = new WebsitePayRequest(PaymentMethod.CREDITCARD_PAYBYTOKEN, "" + System.nanoTime(), 0.01,
+        WebsitePayRequest request = new WebsitePayRequest(PaymentMethod.ALIPAY, "" + System.nanoTime(), 0.01,
                 "test web");
         request.setBrowserType(BrowserType.PC);
 
