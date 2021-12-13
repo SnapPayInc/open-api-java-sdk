@@ -12,7 +12,7 @@ If you use Apache Maven, just add the following dependency to pom.xml.
 <dependency>
     <groupId>ca.snappay</groupId>
     <artifactId>openapi-java-sdk</artifactId>
-    <version>1.2.0-RC3</version>
+    <version>1.2.0-RC4</version>
 </dependency>
 ```
 
