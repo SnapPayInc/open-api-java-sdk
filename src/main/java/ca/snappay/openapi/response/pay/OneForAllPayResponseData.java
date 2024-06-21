@@ -13,29 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.snappay.openapi.constant;
+package ca.snappay.openapi.response.pay;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * The payment method. Can be any of AliPay, WeChatPay, or UnionPay.
+ * The response data for one-for-all payment.
  *
  * @author shawndu
  * @version 1.0
  */
-public enum PaymentMethod {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class OneForAllPayResponseData extends AbstractPayResponseData {
 
-    ALIPAY,
-
-    WECHATPAY,
-
-    UNIONPAY,
-
-    UNIONPAY_QR,
-
-    SNAPLII,
-
-    @SerializedName("CREDITCARD.PAYBYTOKEN")
-    CREDITCARD_PAYBYTOKEN;
+    @SerializedName("redirect_url")
+    private String redirectUrl;
 
 }

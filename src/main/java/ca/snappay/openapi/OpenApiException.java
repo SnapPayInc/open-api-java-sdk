@@ -36,6 +36,12 @@ public class OpenApiException extends Exception {
         this.errMsg = errMsg;
     }
 
+    public OpenApiException(String errCode, String errMsg, Throwable cause) {
+        super(errCode + ":" + errMsg, cause);
+        this.errCode = errCode;
+        this.errMsg = errMsg;
+    }
+
     public String getErrCode() {
         return this.errCode;
     }

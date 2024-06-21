@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.snappay.openapi.constant;
+package ca.snappay.openapi.response.card;
 
 import com.google.gson.annotations.SerializedName;
+import ca.snappay.openapi.constant.CardStatus;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * The payment method. Can be any of AliPay, WeChatPay, or UnionPay.
+ * The response data for card query.
  *
  * @author shawndu
  * @version 1.0
  */
-public enum PaymentMethod {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class QueryCardResponseData extends AbstractCardResponseData {
 
-    ALIPAY,
+    @SerializedName("card_balance")
+    private Double balance;
 
-    WECHATPAY,
-
-    UNIONPAY,
-
-    UNIONPAY_QR,
-
-    SNAPLII,
-
-    @SerializedName("CREDITCARD.PAYBYTOKEN")
-    CREDITCARD_PAYBYTOKEN;
+    @SerializedName("card_status")
+    private CardStatus cardStatus;
 
 }

@@ -15,6 +15,10 @@
  */
 package ca.snappay.openapi;
 
+import ca.snappay.openapi.request.OpenApiRequest;
+import ca.snappay.openapi.request.card.ActivateCardRequest;
+import ca.snappay.openapi.request.card.QueryCardRequest;
+import ca.snappay.openapi.request.card.RefundCardRequest;
 import ca.snappay.openapi.request.misc.QueryExchangeRateRequest;
 import ca.snappay.openapi.request.order.QueryOrderRequest;
 import ca.snappay.openapi.request.order.RefundOrderRequest;
@@ -23,8 +27,13 @@ import ca.snappay.openapi.request.pay.BarCodePayRequest;
 import ca.snappay.openapi.request.pay.H5PayRequest;
 import ca.snappay.openapi.request.pay.MiniPayRequest;
 import ca.snappay.openapi.request.pay.NativePayRequest;
+import ca.snappay.openapi.request.pay.OneForAllPayRequest;
 import ca.snappay.openapi.request.pay.QRCodePayRequest;
 import ca.snappay.openapi.request.pay.WebsitePayRequest;
+import ca.snappay.openapi.response.OpenApiResponse;
+import ca.snappay.openapi.response.card.ActivateCardResponse;
+import ca.snappay.openapi.response.card.QueryCardResponse;
+import ca.snappay.openapi.response.card.RefundCardResponse;
 import ca.snappay.openapi.response.misc.QueryExchangeRateResponse;
 import ca.snappay.openapi.response.order.QueryOrderResponse;
 import ca.snappay.openapi.response.order.RefundOrderResponse;
@@ -33,6 +42,7 @@ import ca.snappay.openapi.response.pay.BarCodePayResponse;
 import ca.snappay.openapi.response.pay.H5PayResponse;
 import ca.snappay.openapi.response.pay.MiniPayResponse;
 import ca.snappay.openapi.response.pay.NativePayResponse;
+import ca.snappay.openapi.response.pay.OneForAllPayResponse;
 import ca.snappay.openapi.response.pay.QRCodePayResponse;
 import ca.snappay.openapi.response.pay.WebsitePayResponse;
 
@@ -111,6 +121,17 @@ public interface OpenApiClient {
     MiniPayResponse miniPay(MiniPayRequest request) throws OpenApiException;
 
     /**
+     * Make one-for-all payment.
+     *
+     * @param request the request.
+     * @return the response.
+     * @throws OpenApiException if any error occurred.
+     * @see <a href="https://developer.snappay.ca/openapi.html#pay-apis-one-for-all-api-post">
+     *      API Documentation</a>
+     */
+    OneForAllPayResponse oneForAllPay(OneForAllPayRequest request) throws OpenApiException;
+
+    /**
      * Query order status.
      *
      * @param request the request.
@@ -154,4 +175,40 @@ public interface OpenApiClient {
      */
     QueryExchangeRateResponse queryExchangeRate(QueryExchangeRateRequest request) throws OpenApiException;
 
+    /**
+     * Activate a card.
+     *
+     * @param request the request.
+     * @return the response.
+     * @throws OpenApiException if any error occurred.
+     */
+    ActivateCardResponse activateCard(ActivateCardRequest request) throws OpenApiException;
+
+    /**
+     * Query card information.
+     *
+     * @param request the request.
+     * @return the response.
+     * @throws OpenApiException if any error occurred.
+     */
+    QueryCardResponse queryCard(QueryCardRequest request) throws OpenApiException;
+
+    /**
+     * Refund (deactivate) a card.
+     *
+     * @param request the request.
+     * @return the response.
+     * @throws OpenApiException if any error occurred.
+     */
+    RefundCardResponse refundCard(RefundCardRequest request) throws OpenApiException;
+
+    /**
+     * Executes an API request. This is a low-level method which could handle all API methods.
+     *
+     * @param <T> the type of response.
+     * @param request the API request.
+     * @return the API response.
+     * @throws OpenApiException if any error occurred.
+     */
+    <T extends OpenApiResponse<?>> T execute(OpenApiRequest<T> request) throws OpenApiException;
 }

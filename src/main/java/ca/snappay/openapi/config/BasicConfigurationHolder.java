@@ -36,6 +36,9 @@ public final class BasicConfigurationHolder implements ConfigurationHolder {
     private String publicKey;
     private String privateKey;
 
+    private boolean partialPaymentSupported = false;
+    private String alternativeOrderNumberPrefix;
+    private String alternativeOrderNumberSuffix;
     private int connectionTimeout = 30;
     private int readTimeout = 30;
 

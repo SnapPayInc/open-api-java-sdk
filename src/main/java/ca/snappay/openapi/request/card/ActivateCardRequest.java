@@ -13,29 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.snappay.openapi.constant;
+package ca.snappay.openapi.request.card;
 
-import com.google.gson.annotations.SerializedName;
+import ca.snappay.openapi.response.card.ActivateCardResponse;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * The payment method. Can be any of AliPay, WeChatPay, or UnionPay.
+ * The request for card activation.
  *
  * @author shawndu
  * @version 1.0
  */
-public enum PaymentMethod {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class ActivateCardRequest extends AbstractCardRequest<ActivateCardResponse> {
 
-    ALIPAY,
+    private static final String REQUEST_METHOD = "card.activate";
 
-    WECHATPAY,
+    @Override
+    public String getRequestMethod() {
+        return REQUEST_METHOD;
+    }
 
-    UNIONPAY,
-
-    UNIONPAY_QR,
-
-    SNAPLII,
-
-    @SerializedName("CREDITCARD.PAYBYTOKEN")
-    CREDITCARD_PAYBYTOKEN;
+    public ActivateCardRequest(String cardNo) {
+        setCardNo(cardNo);
+    }
 
 }

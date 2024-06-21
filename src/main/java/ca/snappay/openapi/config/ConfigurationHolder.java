@@ -105,6 +105,28 @@ public interface ConfigurationHolder {
     public String getPrivateKey();
 
     /**
+     * Gets whether the client supports partial payment.
+     * This feature is only available for Snaplii payment.
+     *
+     * @return true if the client supports partial payment, or false otherwise.
+     */
+    public boolean isPartialPaymentSupported();
+
+    /**
+     * Gets the prefix for generating alternative order number when making partial payment.
+     *
+     * @return the alternative order number prefix.
+     */
+    public String getAlternativeOrderNumberPrefix();
+
+    /**
+     * Gets the suffix for generating alternative order number when making partial payment.
+     *
+     * @return the alternative order number suffix.
+     */
+    public String getAlternativeOrderNumberSuffix();
+
+    /**
      * Gets the connection timeout setting.
      *
      * @return connection timeout in seconds.
