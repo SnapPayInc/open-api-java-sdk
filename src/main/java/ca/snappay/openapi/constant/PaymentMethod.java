@@ -10,6 +10,8 @@ public enum PaymentMethod {
 
     ALIPAY,
 
+    ALIPAYAMS,
+
     WECHATPAY,
 
     UNIONPAY;
